@@ -1,16 +1,7 @@
 fancy_echo() {
   local fmt="$1"; shift
-
-  # shellcheck disable=SC2059
   printf "\n$fmt\n" "$@"
 }
-
-# if [ ! -f "$HOME/.bash_profile" ]; then
-if ! test -e "$HOME/.bash_profile"; then
-  touch "$HOME/.bash_profile"
-fi
-
-shell_file="$HOME/.bash_profile"
 
 append_to_file() {
   local file="$1"
@@ -21,19 +12,6 @@ append_to_file() {
   fi
 }
 
-# append_to_file "$shell_file" 'export PATH="$HOME/.bin:$PATH"'
-
-if ! command -v brew >/dev/null; then
-  fancy_echo "Installing Homebrew ..."
-  curl -fsS \
-    'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
-
-  # shellcheck disable=SC2016
-  append_to_file "$shell_file" 'export PATH="/usr/local/bin:$PATH"'
-else
-  fancy_echo "Homebrew already installed. Skipping ..."
-fi
-
 brew_is_installed() {
   brew list -1 | grep -Fqx "$1"
 }
@@ -41,6 +19,28 @@ brew_is_installed() {
 tap_is_installed() {
   brew tap -1 | grep -Fqx "$1"
 }
+
+if ! test -e "$HOME/.bash_profile"; then
+  touch "$HOME/.bash_profile"
+fi
+
+shell_file="$HOME/.bash_profile"
+
+if ! test -d "$HOME/bin"; then
+  mkdir "$HOME/bin"
+fi
+
+append_to_file "$shell_file" 'export PATH="$HOME/bin:$PATH"'
+
+# Install brew
+if ! command -v brew >/dev/null; then
+  fancy_echo "Installing Homebrew ..."
+  curl -fsS \
+    'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
+  append_to_file "$shell_file" 'export PATH="/usr/local/bin:$PATH"'
+else
+  fancy_echo "Homebrew already installed. Skipping ..."
+fi
 
 # Remove brew-cask since it is now installed as part of brew tap caskroom/cask.
 # See https://github.com/caskroom/homebrew-cask/releases/tag/v0.60.0
@@ -74,9 +74,9 @@ if test -e "$HOME/Brewfile"; then
   fi
 fi
 
+# Install Ruby
 append_to_file "$HOME/.gemrc" 'gem: --no-document'
 
-# Ruby
 # if command -v rbenv >/dev/null || command -v rvm >/dev/null; then
 #   fancy_echo 'We recommend chruby and ruby-install over RVM or rbenv'
 # else
@@ -176,7 +176,6 @@ append_to_file "$HOME/.gemrc" 'gem: --no-document'
 # fi
 
 if [ -f "$HOME/.laptop.local" ]; then
-  # shellcheck source=/dev/null
   . "$HOME/.laptop.local"
 fi
 
@@ -184,8 +183,6 @@ fancy_echo 'All done!'
 # echo "Install RVM..."
 # gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 # curl -sSL https://get.rvm.io | bash -s stable
-#
-# /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 #
 # brew_path=$(brew --prefix)
 # brew install git git-extras
