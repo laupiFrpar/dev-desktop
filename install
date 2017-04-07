@@ -1,3 +1,5 @@
+#!/usr/bin/sh
+
 fancy_echo() {
   local fmt="$1"; shift
   printf "\n$fmt\n" "$@"
@@ -7,6 +9,7 @@ append_to_file() {
   local file="$1"
   local text="$2"
 
+  # Add the text in the file if it does not exist
   if ! grep -qs "^$text$" "$file"; then
     printf "\n%s\n" "$text" >> "$file"
   fi
@@ -35,8 +38,7 @@ append_to_file "$shell_file" 'export PATH="$HOME/bin:$PATH"'
 # Install brew
 if ! command -v brew >/dev/null; then
   fancy_echo "Installing Homebrew ..."
-  curl -fsS \
-    'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
+  curl -fsS 'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
   append_to_file "$shell_file" 'export PATH="/usr/local/bin:$PATH"'
 else
   fancy_echo "Homebrew already installed. Skipping ..."
@@ -167,16 +169,36 @@ append_to_file "$HOME/.gemrc" 'gem: --no-document'
 #   fi
 # fi
 
-# Generate ssh for github
-# if app_is_installed 'GitHub'; then
-#   fancy_echo "It looks like you've already configured your GitHub SSH keys."
-#   fancy_echo "If not, you can do it by signing in to the GitHub app on your Mac."
-# elif [ ! -f "$HOME/.ssh/github_rsa.pub" ]; then
-#   open ~/Applications/GitHub\ Desktop.app
-# fi
+# Configure the git
+fancy_echo "Configure your git ..."
+echo -n "Your name :"
+read -r name
+echo -n "Your email : "
+read -r email
 
-if [ -f "$HOME/.laptop.local" ]; then
-  . "$HOME/.laptop.local"
+if ! command git config --get user.name $name > /dev/null ; then
+  git config --global user.name "$name"
+fi
+
+if ! command git config --get user.email $email > /dev/null ; then
+  git config --global user.email $email
+fi
+
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
+git config --global alias.del-merged-branch '!git branch --merged | egrep -v "(\*|master|develop)" | xargs git branch -d'
+git config --global alias.edit-conflicted-files '!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; $EDITOR `f`'
+git config --global alias.add-conflicted-files '!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`'
+
+if ! test -d "$HOME/.ssh"; then
+  fancy_echo "Configure your SSH ..."
+  ssh-keygen -t rsa -b 4096 -C "$email"
+fi
+
+if [ -f "$HOME/.machine.local" ]; then
+  . "$HOME/.machine.local"
 fi
 
 fancy_echo 'All done!'
