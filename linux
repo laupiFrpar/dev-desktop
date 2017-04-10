@@ -1,0 +1,84 @@
+#!/bin/sh
+
+fancy_echo() {
+  local fmt="$1"; shift
+  printf "\n$fmt\n" "$@"
+}
+
+append_to_file() {
+  local file="$1"
+  local text="$2"
+
+  # Add the text in the file if it does not exist
+  if ! grep -qs "^$text$" "$file"; then
+    printf "\n%s\n" "$text" >> "$file"
+  fi
+}
+
+if ! test -e "$HOME/.bash_profile"; then
+  touch "$HOME/.bash_profile"
+fi
+
+shell_file="$HOME/.bash_profile"
+
+if ! test -d "$HOME/bin"; then
+  mkdir "$HOME/bin"
+fi
+
+append_to_file "$shell_file" 'export PATH="$HOME/bin:$PATH"'
+
+fancy_echo 'Updating Rubygems...'
+gem update --system
+gem install sass
+
+# Configure the git
+fancy_echo "Configure your git ..."
+echo -n "Your name :"
+read -r name
+echo -n "Your email : "
+read -r email
+
+if ! command git config --get user.name $name > /dev/null ; then
+  git config --global user.name "$name"
+fi
+
+if ! command git config --get user.email $email > /dev/null ; then
+  git config --global user.email $email
+fi
+
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
+git config --global alias.del-merged-branch '!git branch --merged | egrep -v "(\*|master|develop)" | xargs git branch -d'
+git config --global alias.edit-conflicted-files '!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; $EDITOR `f`'
+git config --global alias.add-conflicted-files '!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`'
+
+if ! test -d "$HOME/.ssh"; then
+  fancy_echo "Configure your SSH ..."
+  ssh-keygen -t rsa -b 4096 -C "$email"
+fi
+
+fancy_echo "Configuring your bash ..."
+
+append_to_file "$shell_file" "brew_path=\$(brew --prefix)"
+append_to_file "$shell_file" ". \$brew_path/etc/bash_completion"
+append_to_file "$shell_file" ". \$brew_path/opt/git/etc/bash_completion.d/git-completion.bash"
+append_to_file "$shell_file" ". \$brew_path/opt/git/etc/bash_completion.d/git-prompt.sh"
+append_to_file "$shell_file" "if test -e \"\$HOME/.profile\"; then"
+append_to_file "$shell_file" "  source \"\$HOME/.profile\""
+append_to_file "$shell_file" "fi"
+
+fancy_echo "Configure your vim ..."
+
+if ! test -f $HOME/.vimrc; then
+  touch $HOME/.vimrc
+fi
+
+append_to_file "$HOME/.vimrc" "set ruler"
+
+if [ -f "$HOME/.web-development-environment.local" ]; then
+  . "$HOME/.web-development-environment.local"
+fi
+
+fancy_echo 'All done!'

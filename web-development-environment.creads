@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Install node@5
+brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/3608f5725f377a2e050331c6df63d66ffde97461/Formula/node%405.rb
+
+# Install php55-imagick and imagemagick 6
+brew install https://github.com/Homebrew/homebrew-core/raw/6f014f2b7f1f9e618fd5c0ae9c93befea671f8be/Formula/imagemagick.rb
+brew install https://github.com/Homebrew/homebrew-php/raw/1a21e9fc83d2de2526805adb461b37aadb5b0ddf/Formula/php55-imagick.rb
+
+# Pin these packages to forbid to upgrade
+brew pin node@5 imagemagick php55-imagick
