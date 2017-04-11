@@ -130,18 +130,25 @@ else
 fi
 
 # Configure the git
-fancy_echo "Configure your git ..."
-echo -n "Your name :"
-read -r name
-echo -n "Your email : "
-read -r email
-
-if ! command git config --get user.name $name > /dev/null ; then
-  git config --global user.name "$name"
+fancy_echo "Configuring your git ..."
+if test -z $git_config_user_name; then
+  echo -n "Your name :"
+  read -r git_config_user_name
+  append_to_file "$config_file" "git_config_user_name=$git_config_user_name"
 fi
 
-if ! command git config --get user.email $email > /dev/null ; then
-  git config --global user.email $email
+if test -z $git_config_user_email; then
+  echo -n "Your email : "
+  read -r git_config_user_email
+  append_to_file "$config_file" "git_config_user_email=$git_config_user_email"
+fi
+
+if ! command git config --get user.name $git_config_user_name > /dev/null ; then
+  git config --global user.name "$git_config_user_name"
+fi
+
+if ! command git config --get user.email $git_config_user_email > /dev/null ; then
+  git config --global user.email $git_config_user_email
 fi
 
 git config --global alias.co checkout
