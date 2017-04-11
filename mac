@@ -126,8 +126,7 @@ if ! test -e /usr/local/bin/composer; then
     mv composer.phar /usr/local/bin/composer
   fi
 else
-  fancy_echo "Updating Composer ..."
-  sudo -H composer self-update
+  fancy_echo "Composer already installed. Skipping ..."
 fi
 
 # Configure the git
