@@ -166,13 +166,14 @@ fi
 
 fancy_echo "Configuring your bash ..."
 
-append_to_file "$shell_file" "brew_path=\$(brew --prefix)"
-append_to_file "$shell_file" ". \$brew_path/etc/bash_completion"
-append_to_file "$shell_file" ". \$brew_path/opt/git/etc/bash_completion.d/git-completion.bash"
-append_to_file "$shell_file" ". \$brew_path/opt/git/etc/bash_completion.d/git-prompt.sh"
-append_to_file "$shell_file" "if test -e \"\$HOME/.profile\"; then"
-append_to_file "$shell_file" "  source \"\$HOME/.profile\""
-append_to_file "$shell_file" "fi"
+append_to_file "$shell_file" 'alias ll="ls -l"'
+append_to_file "$shell_file" 'brew_path=$(brew --prefix)'
+append_to_file "$shell_file" '. $brew_path/etc/bash_completion'
+append_to_file "$shell_file" '. $brew_path/opt/git/etc/bash_completion.d/git-completion.bash'
+append_to_file "$shell_file" '. $brew_path/opt/git/etc/bash_completion.d/git-prompt.sh'
+append_to_file "$shell_file" 'if test -e "$HOME/.profile"; then'
+append_to_file "$shell_file" '  source "$HOME/.profile"'
+append_to_file "$shell_file" 'fi'
 
 fancy_echo "Configuring your vim ..."
 
