@@ -1,11 +1,39 @@
 #!/bin/sh
 
-cd ~
+fancy_echo() {
+  local fmt="$1"; shift
+  printf "\n$fmt\n" "$@"
+}
+
+append_to_file() {
+  local file="$1"
+  local text="$2"
+
+  # Add the text in the file if it does not exist
+  if ! grep -qs "^$text$" "$file"; then
+    printf "\n%s\n" "$text" >> "$file"
+  fi
+}
+
+if ! test -d "$HOME/.web-development-environment"; then
+  mkdir "$HOME/.web-development-environment"
+fi
+
+root="$HOME/.web-development-environment"
+
+if ! test -e "$root/config"; then
+  touch "$root/config"
+fi
+
+config_file="$root/config"
+source $config_file
+
+cd $root
 
 if [ "$(uname)" == "Darwin" ]; then
   curl --remote-name https://raw.githubusercontent.com/laupiFrpar/web-development-environment/master/mac
   curl --remote-name https://raw.githubusercontent.com/laupiFrpar/web-development-environment/master/Brewfile
-  /usr/bin/env bash mac 2>&1 | tee ~/web-development-environment.log
+  /usr/bin/env bash mac 2>&1 | tee "$HOME/.web-development-environment.log"
 elif [ "$(expr subtr $(uname -s) 1 10)" == "Linux" ]; then
   curl --remote-name https://raw.githubusercontent.com/laupiFrpar/web-development-environment/master/linux
   /usr/bin/env bash linux 2>&1 | tee ~/web-development-environment.log

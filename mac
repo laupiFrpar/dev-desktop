@@ -1,20 +1,5 @@
 #!/bin/sh
 
-fancy_echo() {
-  local fmt="$1"; shift
-  printf "\n$fmt\n" "$@"
-}
-
-append_to_file() {
-  local file="$1"
-  local text="$2"
-
-  # Add the text in the file if it does not exist
-  if ! grep -qs "^$text$" "$file"; then
-    printf "\n%s\n" "$text" >> "$file"
-  fi
-}
-
 brew_is_installed() {
   brew list -1 | grep -Fqx "$1"
 }
