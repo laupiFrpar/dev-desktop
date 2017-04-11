@@ -160,8 +160,8 @@ git config --global alias.edit-conflicted-files '!f() { git diff --name-status -
 git config --global alias.add-conflicted-files '!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`'
 
 if ! test -d "$HOME/.ssh"; then
-  fancy_echo "Configure your SSH ..."
-  ssh-keygen -t rsa -b 4096 -C "$email"
+  fancy_echo "Configuring your SSH ..."
+  ssh-keygen -t rsa -b 4096 -C "$git_config_user_email"
 fi
 
 fancy_echo "Configuring your bash ..."
