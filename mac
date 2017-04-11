@@ -8,6 +8,10 @@ tap_is_installed() {
   brew tap -1 | grep -Fqx "$1"
 }
 
+gem_is_installed() {
+  gem list --no-versions | grep -Fqx "$1"
+}
+
 if ! test -e "$HOME/.bash_profile"; then
   touch "$HOME/.bash_profile"
 fi
@@ -61,9 +65,15 @@ if test -e "$HOME/Brewfile"; then
   fi
 fi
 
-fancy_echo 'Updating Rubygems...'
+fancy_echo "Updating Rubygems ..."
 gem update --system
-gem install sass
+
+if ! gem_is_installed 'sass'; then
+  fancy_echo "Installing Sass ..."
+  gem install sass
+else
+  fancy_echo "Sass already installed. Skipping ..."
+fi
 
 # Install PHP
 echo -n "Which version do you want to install ?"
