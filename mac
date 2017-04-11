@@ -76,26 +76,39 @@ else
 fi
 
 # Install PHP
-echo -n "Which version do you want to install ?"
-echo -n " 1) 5.3"
-echo -n " 2) 5.4"
-echo -n " 3) 5.5"
-echo -n " 4) 5.6"
-echo -n " 5) 7.0"
-echo -n " 6) 7.1"
-read -r php_version
+if test -z $php_version; then
+  php_version=$(brew search php | cut -d'/' -f 3 | egrep '^php\d{2}$' | tail -n1)
+  echo -n "We install '$php_version'. Do you want change the version [Ny] ? "
+  read -r -n 1 response
 
-case $php_version in
-1 ) brew install php53 ;;
-2 ) brew install php54 ;;
-3 ) brew install php55 ;;
-4 ) brew install php56 ;;
-5 ) brew install php70 ;;
-6 ) brew install php71 ;;
-esac
+  if [ $response == 'y' ] || [ $response == 'Y' ]; then
+    echo ''
+    echo ''
+    echo 'Available versions : '
+    echo ''
+    brew search php | cut -d'/' -f 3 | egrep '^php\d{2}$'
+    echo ''
+    echo -n "Which version do you want to install ? "
+    read -r php_version
+  fi
+
+  # if test -z $(brew search php | cut -d'/' -f 3 | egrep '^php72$'); then
+  #   echo "the version does not exist"
+  # else
+  #   echo "the version exists"
+  # fi
+
+  append_to_file "$config_file" "php_version=$php_version"
+fi
+
+if ! brew_is_installed "$php_version"; then
+  fancy_echo "Installing PHP ..."
+  brew install $php_version
+else
+  fancy_echo "PHP '$php_version' already installed. Skipping ..."
+fi
 
 # Install Composer
-
 if ! test -e /usr/local/bin/composer; then
   fancy_echo "Installing Composer ..."
   expected_signature=$(wget -q -O - https://composer.github.io/installer.sig)
