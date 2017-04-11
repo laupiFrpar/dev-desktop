@@ -1,5 +1,4 @@
 tap 'homebrew/nginx'
-tap 'homebrew/php'
 
 brew 'mysql@5.5', restart_service: true
 brew 'sqlite'
