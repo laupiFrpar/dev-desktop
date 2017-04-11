@@ -183,8 +183,8 @@ fi
 
 append_to_file "$HOME/.vimrc" "set ruler"
 
-if [ -f "$HOME/.web-development-environment.local" ]; then
-  . "$HOME/.web-development-environment.local"
+if [ -f "$root/web-development-environment.local" ]; then
+  . "$root/web-development-environment.local"
 fi
 
 fancy_echo 'All done!'
