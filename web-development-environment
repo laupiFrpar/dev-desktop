@@ -36,7 +36,7 @@ if [ "$(uname)" == "Darwin" ]; then
   /usr/bin/env bash mac 2>&1 | tee "$HOME/.web-development-environment.log"
 elif [ "$(expr subtr $(uname -s) 1 10)" == "Linux" ]; then
   curl --remote-name https://raw.githubusercontent.com/laupiFrpar/web-development-environment/master/linux
-  /usr/bin/env bash linux 2>&1 | tee ~/web-development-environment.log
+  /usr/bin/env bash linux 2>&1 | tee "$HOME/.web-development-environment.log"
 else
   echo "Your OS is not supported."
 fi
