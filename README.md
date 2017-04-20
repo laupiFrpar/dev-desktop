@@ -33,32 +33,38 @@ Or, attach the whole log file as an attachment.
 
 ## What it sets up
 
-* [chruby] for managing [Ruby] versions
 * [Homebrew] for managing operating system libraries
 * [Homebrew Cask] for quickly installing Mac apps from the command line
 * [Homebrew Services] so you can easily stop, start, and restart services
-* [ruby-install] for installing different versions of Ruby
-* [Sublime Text 3] for coding all the things
+* [Textmate 2] for coding all the things
+* [Firefox] for testing your Rails app on a browser other than Chrome or Safari
+* [iTerm2] - an awesome replacement for the OS X Terminal
+* [Git] - a CVS tool
+* [Bash Completion] - a completion tool for bash
+* [Sass] - an extension of CSS that adds power and elegance to the basic language
+* [PHP] - a popular scripting language
+* [Composer] - a dependency manager for PHP
 
-[chruby]: https://github.com/postmodern/chruby
 [Homebrew]: http://brew.sh/
 [Homebrew Cask]: http://caskroom.io/
 [Homebrew Services]: https://github.com/Homebrew/homebrew-services
-[ruby-install]: https://github.com/postmodern/ruby-install
-[Sublime Text 3]: http://www.sublimetext.com/3
+[Textmate 2]: https://macromates.com/
+[Firefox]: https://www.mozilla.org/en-US/firefox/new/
+[iTerm2]: http://iterm2.com/
+[Git]: https://git-scm.com/
+[Bash Completion]: https://github.com/scop/bash-completion
+[Sass]: https://rubygems.org/gems/sass
+[PHP]: https://secure.php.net/
+[Composer]: https://getcomposer.org/
 
 It should take less than 15 minutes to install (depends on your machine and
 internet connection).
 
 ```bash
 cd ~
-
 curl --remote-name https://raw.githubusercontent.com/tomislav/osx-terminal.app-colors-solarized/master/Solarized%20Dark.terminal
-
 curl --remote-name https://raw.githubusercontent.com/tomislav/osx-terminal.app-colors-solarized/master/Solarized%20Light.terminal
-
 open Solarized%20Dark.terminal
-
 open Solarized%20Light.terminal
 ```
 
@@ -85,12 +91,6 @@ Put your customizations there. If you want to install additional
 tools or Mac apps with Homebrew, add them to your `~/Brewfile.local`.
 You can use the `.web-development-environment.local` and `Brewfile.local` you downloaded
 above to get started. It lets you install the following tools and Mac apps:
-
-* [Firefox] for testing your Rails app on a browser other than Chrome or Safari
-* [iTerm2] - an awesome replacement for the OS X Terminal
-
-[Firefox]: https://www.mozilla.org/en-US/firefox/new/
-[iTerm2]: http://iterm2.com/
 
 Write your customizations such that they can be run safely more than once.
 See the `mac` script for examples.
