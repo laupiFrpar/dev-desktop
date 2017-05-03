@@ -1,10 +1,8 @@
 # Install a web development machine
 
-This repo contains scripts to set up an OS X or Linux computer for web 
-development, and to keep it up to date.
+This repo contains scripts to set up an OS X computer for web development, and to keep it up to date.
 
-It can be run multiple times on the same machine safely. It installs,
-upgrades, or skips packages based on what is already installed on the machine.
+It can be run multiple times on the same machine safely. It installs, upgrades, or skips packages based on what is already installed on the machine.
 
 ## Install
 
@@ -16,9 +14,7 @@ bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/web-development-mach
 
 **Once the script is done, quit and relaunch Terminal.**
 
-It is highly recommended to run the script regularly to keep your computer up
-to date. Once the script has been installed, you'll be able to run it at your
-convenience by typing `web-development-machine`.
+It is highly recommended to run the script regularly to keep your computer up to date. Once the script has been installed, you'll be able to run it at your convenience by typing `install-web-development-machine`.
 
 ## What it sets up
 
@@ -46,8 +42,7 @@ convenience by typing `web-development-machine`.
 [PHP]: https://secure.php.net/
 [Composer]: https://getcomposer.org/
 
-It should take less than 15 minutes to install (depends on your machine and
-internet connection).
+It should take less than 15 minutes to install (depends on your machine and internet connection).
 
 ```bash
 cd ~
@@ -66,8 +61,16 @@ This laptop script is inspired by
 
 ## Todo
 
-- Customize installation
-  - Customize PS1
 - Replace values instead of append at the end of file `append_to_file`
 - Install textmate's plugins
-- Install Docker
+- Install
+  - Docker
+  - Kaleidoscope
+  - Marked 2
+  - Dash
+  - iStats Menus
+  - Spillo
+  - Flux
+  - Sequel Pro
+- Install the Solarized themes
+- Create the workspace dir
