@@ -6,30 +6,19 @@ development, and to keep it up to date.
 It can be run multiple times on the same machine safely. It installs,
 upgrades, or skips packages based on what is already installed on the machine.
 
-You can easily [customize](#customize-in-laptoplocal) the script to install 
-additional tools.
-
 ## Install
 
 In your Terminal window, copy and execute the command below.
 
 ```sh
-bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/web-development-environment/master/web-development-environment)
+bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/web-development-machine/master/web-development-machine)
 ```
 
 **Once the script is done, quit and relaunch Terminal.**
 
 It is highly recommended to run the script regularly to keep your computer up
 to date. Once the script has been installed, you'll be able to run it at your
-convenience by typing `install` and pressing `return` in your Terminal.
-
-## Debugging
-
-Your last Laptop run will be saved to a file called `mac-dev.log` in your home
-folder. Read through it to see if you can debug the issue yourself. If not,
-copy the entire contents of `web-development-environment.log` into a
-[new GitHub Issue](https://github.com/laupiFrpar/web-development-environment/issues/new) for me.
-Or, attach the whole log file as an attachment.
+convenience by typing `web-development-machine`.
 
 ## What it sets up
 
@@ -68,35 +57,7 @@ open Solarized%20Dark.terminal
 open Solarized%20Light.terminal
 ```
 
-This will add the Solarized themes to your Terminal's Profiles, and if you want to set one of them as the default, go to your Terminal's Preferences,
-click on the Settings tab, scroll down to the Solarized Profile, click on it,
-then click the Default button. When you open a new window or tab (or if you quit and relaunch Terminal), it will use the Solarized theme.
-
-## Customize in `~/.web-development-environment.local` and `~/Brewfile.local`
-```sh
-# Go to your OS X user's root directory
-cd ~
-
-# Download the sample files to your computer
-curl --remote-name https://raw.githubusercontent.com/monfresh/laptop/master/.web-development-environment.local
-curl --remote-name https://raw.githubusercontent.com/monfresh/laptop/master/Brewfile.local
-
-# open the files in Sublime Text
-subl .web-development-environment.local
-subl Brewfile.local
-```
-
-Your `~/.web-development-environment.local` is run at the end of the `mac` script.
-Put your customizations there. If you want to install additional
-tools or Mac apps with Homebrew, add them to your `~/Brewfile.local`.
-You can use the `.web-development-environment.local` and `Brewfile.local` you downloaded
-above to get started. It lets you install the following tools and Mac apps:
-
-Write your customizations such that they can be run safely more than once.
-See the `mac` script for examples.
-
-Laptop functions such as `fancy_echo`, and `gem_install_or_update` can be used
-in your `~/.web-development-environment.local`.
+This will add the Solarized themes to your Terminal's Profiles, and if you want to set one of them as the default, go to your Terminal's Preferences, click on the Settings tab, scroll down to the Solarized Profile, click on it, then click the Default button. When you open a new window or tab (or if you quit and relaunch Terminal), it will use the Solarized theme.
 
 ## Credits
 
@@ -105,17 +66,8 @@ This laptop script is inspired by
 
 ## Todo
 
-- Install Composer
-- Add some features in `.bash_profile` 
 - Customize installation
-    - Customize PS1
-    - Install oh-my-git (customize installation)
-    - Install PHP
-        - For creads, pin the imagemagick and php-imagick version (into the file `machine.local` or `creads.local`)
-    - Install mysql
-    - Install `thefuck` for Creads
-    - Install `node@5` for Creads
-    - Install `symfony-console-complete`
-    - Add the configuration for Gitlab Creads
-    - Install MailCatcher
-- Install on Linux
+  - Customize PS1
+- Replace values instead of append at the end of file `append_to_file`
+- Install textmate's plugins
+- Install Docker

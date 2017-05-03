@@ -1,0 +1,86 @@
+#!/bin/sh
+
+fancy_echo() {
+  local fmt="$1"; shift
+  printf "\n$fmt\n" "$@"
+}
+
+append_to_file() {
+  local file="$1"
+  local text="$2"
+
+  # Add the text in the file if it does not exist
+  if ! grep -qs "^$text$" "$file"; then
+    printf "\n%s\n" "$text" >> "$file"
+  fi
+}
+
+gem_is_installed() {
+  gem list --no-versions | grep "^$1"
+}
+
+gem_install () {
+  if ! gem_is_installed "$1"; then
+    fancy_echo "Installing %s ..." "$1"
+    gem install "$@"
+  else
+    fancy_echo "$@ already installed. Skipping ..."
+  fi
+}
+
+gem_update () {
+  if gem_is_installed "$1"; then
+    fancy_echo "Updating %s ..." "$1"
+    gem update "$@"
+  fi
+}
+
+gem_install_or_update() {
+  if gem_is_installed "$1"; then
+    gem_update "$@"
+  else
+    gem_install "$@"
+  fi
+}
+
+composer_is_installed() {
+  composer global show | grep -q "^$1"
+}
+
+composer_install() {
+  if ! composer_is_installed "$1"; then
+    fancy_echo "Installing %s ..." "$1"
+    composer global install "$1"
+  else
+    fancy_echo "$@ already installed. Skipping ..."
+  fi
+}
+
+composer_update() {
+  if composer_is_installed "$1"; then
+    fancy_echo "Updating %s ..." "$1"
+    composer global update "$1"
+  fi
+}
+
+composer_install_or_update() {
+  if composer_is_installed "$1"; then
+    composer_update "$1"
+  else
+    composer_install "$1"
+  fi
+}
+
+brew_is_installed() {
+  brew list -1 | grep -Fqx "$1"
+}
+
+tap_is_installed() {
+  brew tap -1 | grep -Fqx "$1"
+}
+
+app_is_installed() {
+  local app_name
+  app_name=$(echo "$1" | cut -d'-' -f1)
+  find /Applications -iname "$app_name*" -maxdepth 1 | egrep '.*' > /dev/null
+}
