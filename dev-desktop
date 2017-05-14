@@ -1,26 +1,41 @@
 #!/bin/sh
 
-if ! test -d "$HOME/.web-development-machine"; then
-  mkdir "$HOME/.web-development-machine"
+if ! test -d "$HOME/.dev-desktop"; then
+  mkdir "$HOME/.dev-desktop"
 fi
 
-root="$HOME/.web-development-machine"
-shell_file="$HOME/.bash_profile"
+root="$HOME/.dev-desktop"
+shell_file="$HOME/.zshrc"
 config_file="$root/config"
 
 cd $root
 
-curl --remote-name https://raw.githubusercontent.com/laupiFrpar/web-development-machine/master/functions
-curl --remote-name https://raw.githubusercontent.com/laupiFrpar/web-development-machine/master/Brewfile
+curl --remote-name https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/functions
+curl --remote-name https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/Brewfile
 
 source "$root/functions"
+
+# Please coding here
+
+# If zsh is not the default sh, change it
+if test -z "$ZSH_NAME" -a "${ZSH_NAME+x}" = "x"; then
+  chsh -s zsh
+fi
+
+# Install the latest zsh
+if brew_is_installed 'zsh'; then
+  brew install zsh
+else
+  brew update zsh
+fi
+
 
 if ! test -e "$config_file"; then
   touch "$config_file"
 fi
 
 if ! test -e "$shell_file"; then
-  fancy_echo "Creating a bash profile ..."
+  fancy_echo "Creating a zsh profile ..."
   touch "$shell_file"
 else
   mv -f "$shell_file" "$shell_file-bak"
@@ -180,29 +195,39 @@ if ! test -d "$HOME/.ssh"; then
 fi
 
 # Install Oh My Git
-if ! test -d "$HOME/.web-development-environment"; then
-  fancy_echo "Instaling Oh My Git..."
-  git clone https://github.com/arialdomartini/oh-my-git.git $HOME/.oh-my-git
-else
-  fancy_echo "Updating Oh My Git..."
-  cd $HOME/.oh-my-git
-  git remote update && git pull
-fi
+# if ! test -d "$HOME/.dev-desktop"; then
+#   fancy_echo "Instaling Oh My Git..."
+#   git clone https://github.com/arialdomartini/oh-my-git.git $HOME/.oh-my-git
+# else
+#   fancy_echo "Updating Oh My Git..."
+#   cd $HOME/.oh-my-git
+#   git remote update && git pull
+# fi
 
 fancy_echo "Configuring your bash ..."
 
+if ! brew_is_installed 'antigen'; then
+  brew install antigen
+else
+  brew update antigen
+fi
+
+append_to_file "$shell_file" 'source "/usr/local/share/antigen/antigen.zsh"'
+append_to_file "$shell_file" 'antigen use oh-my-zsh'
+append_to_file "$shell_file" 'antigen bundle git'
+append_to_file "$shell_file" 'antigen bundle zsh-users/zsh-syntax-highlighting'
+append_to_file "$shell_file" 'antigen bundle zsh-users/zsh-completions'
+append_to_file "$shell_file" 'antigen theme robbyrussell'
+append_to_file "$shell_file" 'antigen apply'
 append_to_file "$shell_file" 'if test -e "$HOME/.profile"; then'
 append_to_file "$shell_file" '  source "$HOME/.profile"'
 append_to_file "$shell_file" 'fi'
 append_to_file "$shell_file" 'brew_path=$(brew --prefix)'
 append_to_file "$shell_file" 'export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$brew_path/opt/node@5/bin:$brew_path/bin:$brew_path/sbin:$PATH"'
-append_to_file "$shell_file" "export PS1='\[\033[32m\]\u@\h\[\033[00m\]:\[\033[1;33m\]\w\[\033[31m\]\$(__git_ps1)\[\033[00m\]\$ '"
+# append_to_file "$shell_file" "export PS1='\[\033[32m\]\u@\h\[\033[00m\]:\[\033[1;33m\]\w\[\033[31m\]\$(__git_ps1)\[\033[00m\]\$ '"
 append_to_file "$shell_file" 'export EDITOR="mate -w"'
-append_to_file "$shell_file" 'alias ll="ls -l"'
-append_to_file "$shell_file" 'source $brew_path/opt/git/etc/bash_completion.d/git-completion.bash'
-append_to_file "$shell_file" 'source $brew_path/opt/git/etc/bash_completion.d/git-prompt.sh'
-append_to_file "$shell_file" 'source "$HOME/.oh-my-git/prompt.sh"'
-append_to_file "$shell_file" 'source $brew_path/etc/bash_completion'
+# append_to_file "$shell_file" 'alias ll="ls -l"'
+# append_to_file "$shell_file" 'source "$HOME/.oh-my-git/prompt.sh"'
 append_to_file "$shell_file" 'eval "$(symfony-autocomplete)"'
 
 fancy_echo "Configuring your vim ..."

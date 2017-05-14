@@ -5,7 +5,6 @@ tap 'homebrew/dupes'
 tap 'homebrew/php'
 tap 'homebrew/versions'
 
-brew 'bash-completion'
 brew 'git'
 cask 'firefox'
 cask 'textmate'
