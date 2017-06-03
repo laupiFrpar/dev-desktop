@@ -151,13 +151,13 @@ fi
 
 # Configure the git
 fancy_echo "Configuring your git ..."
-if [ -z $git_config_user_name ]; then
+if [ -z "$git_config_user_name" ]; then
   echo -n "Your name : "
   read -r git_config_user_name
   append_to_file "$config_file" "git_config_user_name=$git_config_user_name"
 fi
 
-if [ -z $git_config_user_email ]; then
+if [ -z "$git_config_user_email" ]; then
   echo -n "Your email : "
   read -r git_config_user_email
   append_to_file "$config_file" "git_config_user_email=$git_config_user_email"
