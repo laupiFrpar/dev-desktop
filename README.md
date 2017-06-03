@@ -6,29 +6,30 @@ It can be run multiple times on the same machine safely. It installs, upgrades, 
 
 ## Install
 
-In your Terminal window, copy and execute the command below.
 
 ```sh
-bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/web-development-machine/master/web-development-machine)
+bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/boot)
 ```
 
 **Once the script is done, quit and relaunch Terminal.**
 
-It is highly recommended to run the script regularly to keep your computer up to date. Once the script has been installed, you'll be able to run it at your convenience by typing `install-web-development-machine`.
+It is highly recommended to run the script regularly to keep your computer up to date. Once the script has been installed, you'll be able to run it at your convenience by typing `dev-desktop`.
 
 ## What it sets up
 
-* [Homebrew] for managing operating system libraries
-* [Homebrew Cask] for quickly installing Mac apps from the command line
-* [Homebrew Services] so you can easily stop, start, and restart services
-* [Textmate 2] for coding all the things
-* [Firefox] for testing your Rails app on a browser other than Chrome or Safari
-* [iTerm2] - an awesome replacement for the OS X Terminal
+* [Homebrew] - for managing operating system libraries
+* [Homebrew Cask] - for quickly installing Mac apps from the command line
+* [Homebrew Services] - so you can easily stop, start, and restart services
 * [Git] - a CVS tool
-* [Bash Completion] - a completion tool for bash
+* [Firefox] - awesome browser
+* [Textmate 2] - for coding all the things
+* [iTerm2] - an awesome replacement for the OS X Terminal
+* [Sequel Pro] - A tool to manage the MySQL database
+* [zsh] - as the default shell.
 * [Sass] - an extension of CSS that adds power and elegance to the basic language
 * [PHP] - a popular scripting language
 * [Composer] - a dependency manager for PHP
+* [Symfony Console Autocomplete] - Shell autocompletion for Symfony Console based scripts
 
 [Homebrew]: http://brew.sh/
 [Homebrew Cask]: http://caskroom.io/
@@ -41,6 +42,9 @@ It is highly recommended to run the script regularly to keep your computer up to
 [Sass]: https://rubygems.org/gems/sass
 [PHP]: https://secure.php.net/
 [Composer]: https://getcomposer.org/
+[zsh]: http://www.zsh.org/
+[Symfony Console Autocomplete]: https://github.com/bamarni/symfony-console-autocomplete
+[Sequel Pro]: https://sequelpro.com/
 
 It should take less than 15 minutes to install (depends on your machine and internet connection).
 
@@ -71,6 +75,4 @@ This laptop script is inspired by
   - iStats Menus
   - Spillo
   - Flux
-  - Sequel Pro
 - Install the Solarized themes
-- Create the workspace dir

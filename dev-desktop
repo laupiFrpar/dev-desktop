@@ -1,48 +1,13 @@
 #!/bin/sh
 
-if ! test -d "$HOME/.dev-desktop"; then
-  mkdir "$HOME/.dev-desktop"
-fi
-
 root="$HOME/.dev-desktop"
 shell_file="$HOME/.zshrc"
 config_file="$root/config"
 
-cd $root
-
-curl --remote-name https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/functions
-curl --remote-name https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/Brewfile
-
 source "$root/functions"
+source $config_file
 
 # Please coding here
-
-# If zsh is not the default sh, change it
-if test -z "$ZSH_NAME" -a "${ZSH_NAME+x}" = "x"; then
-  chsh -s zsh
-fi
-
-# Install the latest zsh
-if brew_is_installed 'zsh'; then
-  brew install zsh
-else
-  brew update zsh
-fi
-
-
-if ! test -e "$config_file"; then
-  touch "$config_file"
-fi
-
-if ! test -e "$shell_file"; then
-  fancy_echo "Creating a zsh profile ..."
-  touch "$shell_file"
-else
-  mv -f "$shell_file" "$shell_file-bak"
-  touch "$shell_file"
-fi
-
-source $config_file
 
 if ! test -d "$HOME/bin"; then
   mkdir "$HOME/bin"
@@ -57,16 +22,6 @@ else
   fancy_echo "Homebrew already installed. Skipping ..."
 fi
 
-# Remove brew-cask since it is now installed as part of brew tap caskroom/cask.
-# See https://github.com/caskroom/homebrew-cask/releases/tag/v0.60.0
-if brew_is_installed 'brew-cask'; then
-  brew uninstall --force 'brew-cask'
-fi
-
-if tap_is_installed 'caskroom/versions'; then
-  brew untap caskroom/versions
-fi
-
 fancy_echo "Updating Homebrew ..."
 cd "$(brew --repo)" && git fetch && git reset --hard origin/master && brew update
 
@@ -79,7 +34,7 @@ else
 fi
 
 fancy_echo "Installing formulas and casks from the Brewfile ..."
-if test -e "$root/Brewfile"; then
+if [ -e "$root/Brewfile" ]; then
   if brew bundle --file="$root/Brewfile"; then
     fancy_echo "All formulas and casks were installed successfully."
   else
@@ -89,9 +44,46 @@ if test -e "$root/Brewfile"; then
   fi
 fi
 
-fancy_echo "Updating Rubygems ..."
-gem update --system
+# If zsh is not the default sh, change it
+if [ $SHELL != "/bin/zsh" ]; then
+  fancy_echo "Setting ZSH as default shell ..."
+  chsh -s /bin/zsh
+else
+  fancy_echo "ZSH is the default shell ..."
+fi
 
+if [ ! -e "$config_file" ]; then
+  touch "$config_file"
+fi
+
+if [ ! -e "$shell_file" ]; then
+  fancy_echo "Creating a zsh profile ..."
+  touch "$shell_file"
+else
+  mv -f "$shell_file" "$shell_file-bak"
+  touch "$shell_file"
+fi
+
+if [ ! -f "$HOME/.gemrc" ]; then
+  touch "$HOME/.gemrc"
+fi
+
+append_to_file "$HOME/.gemrc" 'gem: --no-document'
+
+if ! brew_is_installed "chruby"; then
+  fancy_echo 'Installing chruby, ruby-install, and the latest Ruby...'
+  brew install chruby
+  brew install ruby-install
+  ruby-install ruby
+  
+  # Switch to latest
+  . /usr/local/share/chruby/chruby.sh
+  chruby "ruby-$(latest_installed_ruby)"
+fi
+
+# fancy_echo "Updating Rubygems ..."
+gem update --system
+#
 if ! gem_is_installed 'sass'; then
   fancy_echo "Installing Sass ..."
   gem install sass
@@ -102,7 +94,7 @@ fi
 # Install PHP
 current_version_php=$(brew list | egrep '^php\d{2}$')
 
-if ! test -z $current_version_php; then
+if [ ! -z $current_version_php ]; then
   echo "The PHP version $current_version_php is installed."
   prompt="Would you change the version ? "
 else
@@ -114,7 +106,7 @@ fi
 echo -n $prompt "[yn] "
 read -r -n 1 response_change_version
 
-if ! test -z $response_change_version && ([ $response_change_version == 'y' ] || [ $response_change_version == 'Y' ]); then
+if [ ! -z $response_change_version ] && ([ $response_change_version == 'y' ] || [ $response_change_version == 'Y' ]); then
   echo ''
   echo ''
   echo 'Available versions : '
@@ -124,20 +116,20 @@ if ! test -z $response_change_version && ([ $response_change_version == 'y' ] ||
   echo -n "Which version do you want to install ? "
   read -r new_version_php
   
-  if ! test -z $current_version_php; then
+  if [ ! -z $current_version_php ]; then
     echo "Delete $current_version_php"
   fi
 fi
 
-if ! test -z $new_version_php; then
+if [ ! -z $new_version_php ]; then
   fancy_echo "Installing PHP ..."
   brew install $new_version_php
-elif ! test -z $current_version_php
+elif [ ! -z $current_version_php ]; then
   fancy_echo "PHP '$current_version_php' already installed. Skipping ..."
 fi
 
 # Install Composer
-if ! test -e /usr/local/bin/composer; then
+if [ ! -e /usr/local/bin/composer ]; then
   fancy_echo "Installing Composer ..."
   expected_signature=$(wget -q -O - https://composer.github.io/installer.sig)
   php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -161,13 +153,13 @@ composer_install_or_update('bamarni/symfony-console-autocomplete')
 
 # Configure the git
 fancy_echo "Configuring your git ..."
-if test -z $git_config_user_name; then
+if [ -z $git_config_user_name ]; then
   echo -n "Your name :"
   read -r git_config_user_name
   append_to_file "$config_file" "git_config_user_name=$git_config_user_name"
 fi
 
-if test -z $git_config_user_email; then
+if [ -z $git_config_user_email ]; then
   echo -n "Your email : "
   read -r git_config_user_email
   append_to_file "$config_file" "git_config_user_email=$git_config_user_email"
@@ -189,46 +181,31 @@ git config --global alias.del-merged-branch '!git branch --merged | egrep -v "(\
 git config --global alias.edit-conflicted-files '!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; $EDITOR `f`'
 git config --global alias.add-conflicted-files '!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`'
 
-if ! test -d "$HOME/.ssh"; then
+if [ ! -d "$HOME/.ssh" ]; then
   fancy_echo "Configuring your SSH ..."
   ssh-keygen -t rsa -b 4096 -C "$git_config_user_email"
 fi
 
-# Install Oh My Git
-# if ! test -d "$HOME/.dev-desktop"; then
-#   fancy_echo "Instaling Oh My Git..."
-#   git clone https://github.com/arialdomartini/oh-my-git.git $HOME/.oh-my-git
-# else
-#   fancy_echo "Updating Oh My Git..."
-#   cd $HOME/.oh-my-git
-#   git remote update && git pull
-# fi
-
-fancy_echo "Configuring your bash ..."
-
-if ! brew_is_installed 'antigen'; then
-  brew install antigen
-else
-  brew update antigen
-fi
+fancy_echo "Configuring your zsh ..."
 
 append_to_file "$shell_file" 'source "/usr/local/share/antigen/antigen.zsh"'
 append_to_file "$shell_file" 'antigen use oh-my-zsh'
 append_to_file "$shell_file" 'antigen bundle git'
 append_to_file "$shell_file" 'antigen bundle zsh-users/zsh-syntax-highlighting'
 append_to_file "$shell_file" 'antigen bundle zsh-users/zsh-completions'
-append_to_file "$shell_file" 'antigen theme robbyrussell'
+append_to_file "$shell_file" 'antigen theme https://github.com/denysdovhan/spaceship-zsh-theme spaceship'
 append_to_file "$shell_file" 'antigen apply'
 append_to_file "$shell_file" 'if test -e "$HOME/.profile"; then'
 append_to_file "$shell_file" '  source "$HOME/.profile"'
 append_to_file "$shell_file" 'fi'
 append_to_file "$shell_file" 'brew_path=$(brew --prefix)'
 append_to_file "$shell_file" 'export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$brew_path/opt/node@5/bin:$brew_path/bin:$brew_path/sbin:$PATH"'
-# append_to_file "$shell_file" "export PS1='\[\033[32m\]\u@\h\[\033[00m\]:\[\033[1;33m\]\w\[\033[31m\]\$(__git_ps1)\[\033[00m\]\$ '"
 append_to_file "$shell_file" 'export EDITOR="mate -w"'
-# append_to_file "$shell_file" 'alias ll="ls -l"'
-# append_to_file "$shell_file" 'source "$HOME/.oh-my-git/prompt.sh"'
 append_to_file "$shell_file" 'eval "$(symfony-autocomplete)"'
+append_to_file "$shell_file" 'source /usr/local/share/chruby/chruby.sh'
+append_to_file "$shell_file" 'source /usr/local/share/chruby/auto.sh'
+append_to_file "$shell_file" "chruby ruby-$(latest_installed_ruby)"
+append_to_file "$shell_file" 'alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/monfresh/laptop/master/laptop)"'
 
 fancy_echo "Configuring your vim ..."
 
@@ -237,5 +214,10 @@ if ! test -f $HOME/.vimrc; then
 fi
 
 append_to_file "$HOME/.vimrc" "set ruler"
+append_to_file "$HOME/.vimrc" "syntax on"
+
+if [ ! -d "$HOME/workspace" ]; then
+  mkdir "$HOME/workspace"
+fi
 
 fancy_echo 'All done!'
