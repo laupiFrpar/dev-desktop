@@ -84,3 +84,7 @@ app_is_installed() {
   app_name=$(echo "$1" | cut -d'-' -f1)
   find /Applications -iname "$app_name*" -maxdepth 1 | egrep '.*' > /dev/null
 }
+
+latest_installed_ruby() {
+  find "$HOME/.rubies" -maxdepth 1 -name 'ruby-*' | tail -n1 | egrep -o '\d+\.\d+\.\d+'
+}
