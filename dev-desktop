@@ -149,8 +149,6 @@ else
   fancy_echo "Composer already installed. Skipping ..."
 fi
 
-composer_install_or_update('bamarni/symfony-console-autocomplete')
-
 # Configure the git
 fancy_echo "Configuring your git ..."
 if [ -z $git_config_user_name ]; then
