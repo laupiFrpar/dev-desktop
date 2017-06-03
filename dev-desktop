@@ -154,7 +154,7 @@ composer_install_or_update('bamarni/symfony-console-autocomplete')
 # Configure the git
 fancy_echo "Configuring your git ..."
 if [ -z $git_config_user_name ]; then
-  echo -n "Your name :"
+  echo -n "Your name : "
   read -r git_config_user_name
   append_to_file "$config_file" "git_config_user_name=$git_config_user_name"
 fi
@@ -201,10 +201,9 @@ append_to_file "$shell_file" 'fi'
 append_to_file "$shell_file" 'brew_path=$(brew --prefix)'
 append_to_file "$shell_file" 'export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$brew_path/opt/node@5/bin:$brew_path/bin:$brew_path/sbin:$PATH"'
 append_to_file "$shell_file" 'export EDITOR="mate -w"'
-append_to_file "$shell_file" 'eval "$(symfony-autocomplete)"'
 append_to_file "$shell_file" 'source /usr/local/share/chruby/chruby.sh'
 append_to_file "$shell_file" 'source /usr/local/share/chruby/auto.sh'
-append_to_file "$shell_file" "chruby ruby-$(latest_installed_ruby)"
+# append_to_file "$shell_file" "chruby ruby-$(latest_installed_ruby)"
 append_to_file "$shell_file" 'alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/boot)"'
 
 fancy_echo "Configuring your vim ..."
