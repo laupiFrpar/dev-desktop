@@ -165,7 +165,7 @@ if [ -z $git_config_user_email ]; then
   append_to_file "$config_file" "git_config_user_email=$git_config_user_email"
 fi
 
-if ! command git config --get user.name $git_config_user_name > /dev/null ; then
+if ! command git config --get user.name "$git_config_user_name" > /dev/null ; then
   git config --global user.name "$git_config_user_name"
 fi
 
@@ -205,7 +205,7 @@ append_to_file "$shell_file" 'eval "$(symfony-autocomplete)"'
 append_to_file "$shell_file" 'source /usr/local/share/chruby/chruby.sh'
 append_to_file "$shell_file" 'source /usr/local/share/chruby/auto.sh'
 append_to_file "$shell_file" "chruby ruby-$(latest_installed_ruby)"
-append_to_file "$shell_file" 'alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/monfresh/laptop/master/laptop)"'
+append_to_file "$shell_file" 'alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/boot)"'
 
 fancy_echo "Configuring your vim ..."
 
