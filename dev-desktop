@@ -149,6 +149,29 @@ else
   fancy_echo "Composer already installed. Skipping ..."
 fi
 
+if ! test -f "/usr/local/etc/dnsmasq.conf"; then
+  # See https://passingcuriosity.com/2013/dnsmasq-dev-osx/
+  fancy_echo "Configuring Dnsmasq ..."
+
+  # Copy the default configuration file
+  cp $(brew list dnsmasq | grep /dnsmasq.conf.example$) /usr/local/etc/dnsmasq.conf
+  # Copy the daemon configuration file into place
+  sudo cp $(brew list dnsmasq | grep /homebrew.mxcl.dnsmasq.plist$) /Library/LaunchDaemons/
+  append_to_file "/usr/local/etc/dnsmasq.conf" "address=/dev/127.0.0.1"
+
+  if ! test -d "/etc/resolver"; then
+    sudo mkdir -p /etc/resolver
+  fi
+
+  sudo tee /etc/resolver/dev >/dev/null <<EOF
+nameserver 127.0.0.1
+EOF
+
+  # Start Dnsmasq automatically
+  sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+fi
+
+
 # Configure the git
 fancy_echo "Configuring your git ..."
 if [ -z "$git_config_user_name" ]; then
