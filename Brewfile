@@ -8,6 +8,7 @@ tap 'homebrew/versions'
 brew 'antigen'
 brew 'dnsmasq'
 brew 'git'
+brew 'nvm'
 brew 'zsh'
 
 cask 'alfred'
