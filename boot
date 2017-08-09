@@ -1,21 +1,21 @@
 #!/bin/sh
 
 if ! test -d "$HOME/.dev-desktop"; then
-  echo "\nCreating the directory \"$HOME/.dev-desktop\" ...\n"
+  printf "\nCreating the directory \"$HOME/.dev-desktop\" ...\n"
   mkdir "$HOME/.dev-desktop"
 else
-  echo "The directory \"$HOME/.dev-desktop\" already created. Skipping ..."
+  printf "The directory \"$HOME/.dev-desktop\" already created. Skipping ..."
 fi
 
 cd "$HOME/.dev-desktop"
 
-echo "\nDownloading functions script ..."
+printf "\nDownloading functions script ..."
 curl -s --remote-name https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/functions
-echo "OK\nDownloading dev-desktop script ..."
+printf "OK\nDownloading dev-desktop script ..."
 curl -s --remote-name https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/dev-desktop
-echo "OK\nDownloading Brewfile ..."
+printf "OK\nDownloading Brewfile ..."
 curl -s --remote-name https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/Brewfile
-echo "OK"
+printf "OK"
 
-echo "\nConfiguring your machine ...\n"
+printf "\nConfiguring your machine ...\n"
 /usr/bin/env bash dev-desktop 2>&1 | tee ~/dev-desktop.log
