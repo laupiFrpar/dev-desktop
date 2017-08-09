@@ -146,7 +146,16 @@ if [ ! -e /usr/local/bin/composer ]; then
     mv composer.phar /usr/local/bin/composer
   fi
 else
-  fancy_echo "Composer already installed. Skipping ..."
+  fancy_echo "Updating Composer ..."
+  composer selfupdate
+fi
+
+if [ ! -f "/usr/local/bin/symfony" ]; then
+  fancy_echo "Installing Symfony installer ..."
+  curl -LsS https://symfony.com/installer -o /usr/local/bin/symfony
+  chmod a+x /usr/local/bin/symfony
+else
+  fancy_echo "Updating Symfony installer ..."
 fi
 
 if ! test -f "/usr/local/etc/dnsmasq.conf"; then
@@ -206,6 +215,7 @@ git config --global alias.br branch
 git config --global alias.ci commit
 git config --global alias.st status
 git config --global alias.del-merged-branch '!git branch --merged | egrep -v "(\*|master|develop)" | xargs git branch -d'
+git config --global alias.cc '!git branch --merged | egrep -v "(\*|master|develop)" | xargs git branch -d'
 git config --global alias.edit-conflicted-files '!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; $EDITOR `f`'
 git config --global alias.add-conflicted-files '!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`'
 
@@ -221,13 +231,17 @@ append_to_file "$shell_file" 'antigen use oh-my-zsh'
 append_to_file "$shell_file" 'antigen bundle git'
 append_to_file "$shell_file" 'antigen bundle zsh-users/zsh-syntax-highlighting'
 append_to_file "$shell_file" 'antigen bundle zsh-users/zsh-completions'
+append_to_file "$shell_file" 'antigen bundle symfony2'
+append_to_file "$shell_file" 'antigen bundle brew'
+append_to_file "$shell_file" 'antigen bundle docker'
+append_to_file "$shell_file" 'antigen bundle docker-compose'
 append_to_file "$shell_file" 'antigen theme https://github.com/denysdovhan/spaceship-zsh-theme spaceship'
 append_to_file "$shell_file" 'antigen apply'
 append_to_file "$shell_file" 'if test -e "$HOME/.profile"; then'
 append_to_file "$shell_file" '  source "$HOME/.profile"'
 append_to_file "$shell_file" 'fi'
 append_to_file "$shell_file" 'brew_path=$(brew --prefix)'
-append_to_file "$shell_file" 'export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$brew_path/opt/node@5/bin:$brew_path/bin:$brew_path/sbin:$PATH"'
+append_to_file "$shell_file" 'export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$brew_path/bin:$brew_path/sbin:$PATH"'
 append_to_file "$shell_file" 'export EDITOR="mate -w"'
 append_to_file "$shell_file" 'source /usr/local/share/chruby/chruby.sh'
 append_to_file "$shell_file" 'source /usr/local/share/chruby/auto.sh'
