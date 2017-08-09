@@ -156,6 +156,7 @@ if [ ! -f "/usr/local/bin/symfony" ]; then
   chmod a+x /usr/local/bin/symfony
 else
   fancy_echo "Updating Symfony installer ..."
+  symfony selfupdate
 fi
 
 if ! test -f "/usr/local/etc/dnsmasq.conf"; then
