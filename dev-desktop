@@ -247,6 +247,8 @@ append_to_file "$shell_file" 'export EDITOR="mate -w"'
 append_to_file "$shell_file" 'source /usr/local/share/chruby/chruby.sh'
 append_to_file "$shell_file" 'source /usr/local/share/chruby/auto.sh'
 append_to_file "$shell_file" "chruby ruby-$(latest_installed_ruby)"
+append_to_file "$profile_file" 'export NVM_DIR="$HOME/.nvm"'
+append_to_file "$profile_file" '. "/usr/local/opt/nvm/nvm.sh"'
 append_to_file "$shell_file" 'alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/boot)"'
 
 fancy_echo "Configuring your vim ..."
