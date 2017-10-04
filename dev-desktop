@@ -250,7 +250,7 @@ append_to_file "$shell_file" "chruby ruby-$(latest_installed_ruby)"
 append_to_file "$shell_file" 'export NVM_DIR="$HOME/.nvm"'
 append_to_file "$shell_file" '. "/usr/local/opt/nvm/nvm.sh"'
 append_to_file "$shell_file" 'alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/boot)"'
-append_to_file "$shell_file" "alias hostip=\"ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?192\.([0-9]*\.){2}[0-9]*).*/\2/p'\""
+append_to_file "$shell_file" "alias hostip=\"ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(192\.([0-9]*\.){2}[0-9]*).*/\2/p'\""
 append_to_file "$shell_file" 'export HOST_IP=$(hostip)'
 
 fancy_echo "Configuring your vim ..."
