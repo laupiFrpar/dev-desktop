@@ -243,7 +243,7 @@ append_to_file "$shell_file" '  source "$HOME/.profile"'
 append_to_file "$shell_file" 'fi'
 append_to_file "$shell_file" 'brew_path=$(brew --prefix)'
 append_to_file "$shell_file" 'export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$brew_path/bin:$brew_path/sbin:$PATH"'
-append_to_file "$shell_file" 'export EDITOR="mate -w"'
+append_to_file "$shell_file" 'export EDITOR="subl -w"'
 append_to_file "$shell_file" 'source /usr/local/share/chruby/chruby.sh'
 append_to_file "$shell_file" 'source /usr/local/share/chruby/auto.sh'
 append_to_file "$shell_file" "chruby ruby-$(latest_installed_ruby)"
