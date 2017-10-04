@@ -75,7 +75,7 @@ if ! brew_is_installed "chruby"; then
   brew install chruby
   brew install ruby-install
   ruby-install ruby
-  
+
   # Switch to latest
   . /usr/local/share/chruby/chruby.sh
   chruby "ruby-$(latest_installed_ruby)"
@@ -115,7 +115,7 @@ if [ ! -z $response_change_version ] && ([ $response_change_version == 'y' ] || 
   echo ''
   echo -n "Which version do you want to install ? "
   read -r new_version_php
-  
+
   if [ ! -z $current_version_php ]; then
     echo "Delete $current_version_php"
   fi
@@ -250,6 +250,8 @@ append_to_file "$shell_file" "chruby ruby-$(latest_installed_ruby)"
 append_to_file "$shell_file" 'export NVM_DIR="$HOME/.nvm"'
 append_to_file "$shell_file" '. "/usr/local/opt/nvm/nvm.sh"'
 append_to_file "$shell_file" 'alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/boot)"'
+append_to_file "$shell_file" "alias hostip=\"ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?192\.([0-9]*\.){2}[0-9]*).*/\2/p'\""
+append_to_file "$shell_file" 'export HOST_IP=$(hostip)'
 
 fancy_echo "Configuring your vim ..."
 
