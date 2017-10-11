@@ -118,6 +118,7 @@ if [ ! -z $response_change_version ] && ([ $response_change_version == 'y' ] || 
 
   if [ ! -z $current_version_php ]; then
     echo "Delete $current_version_php"
+    brew remove $current_version_php
   fi
 fi
 
