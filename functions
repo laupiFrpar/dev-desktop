@@ -9,6 +9,8 @@ append_to_file() {
   local file="$1"
   local text="$2"
 
+  echo $file
+  echo $text
   # Add the text in the file if it does not exist
   if ! grep -qs "^$text$" "$file"; then
     printf "\n%s\n" "$text" >> "$file"
