@@ -168,13 +168,13 @@ if ! test -f "/usr/local/etc/dnsmasq.conf"; then
   cp $(brew list dnsmasq | grep /dnsmasq.conf.example$) /usr/local/etc/dnsmasq.conf
   # Copy the daemon configuration file into place
   sudo cp $(brew list dnsmasq | grep /homebrew.mxcl.dnsmasq.plist$) /Library/LaunchDaemons/
-  append_to_file "/usr/local/etc/dnsmasq.conf" "address=/test/127.0.0.1"
+  append_to_file "/usr/local/etc/dnsmasq.conf" "address=/local/127.0.0.1"
 
   if ! test -d "/etc/resolver"; then
     sudo mkdir -p /etc/resolver
   fi
 
-  sudo tee /etc/resolver/test >/dev/null <<EOF
+  sudo tee /etc/resolver/local >/dev/null <<EOF
 nameserver 127.0.0.1
 EOF
 
