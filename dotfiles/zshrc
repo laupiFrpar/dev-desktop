@@ -1,0 +1,112 @@
+brew_path=$(brew --prefix)
+
+# Configure Aliases
+
+alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/boot)"
+alias hostip="ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(192\.([0-9]*\.){2}[0-9]*).*/\2/p'"
+
+# Export variables
+
+export EDITOR="subl -w"
+export HOST_IP=$(hostip)
+export NVM_DIR="$HOME/.nvm"
+export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$brew_path/bin:$brew_path/sbin:$PATH"
+export THEME="xterm-256color"
+
+# Load Antigen - ZSH Plugins manager
+
+source "/usr/local/share/antigen/antigen.zsh"
+
+## Configure ZSH
+
+antigen use oh-my-zsh
+
+## Install zsh plugins
+
+antigen bundle brew
+antigen bundle colored-man-pages
+antigen bundle docker
+antigen bundle docker-compose
+antigen bundle git
+antigen bundle symfony2
+antigen bundle z
+antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle zsh-users/zsh-completions
+antigen bundle zsh-users/zsh-syntax-highlighting
+
+## Configure History
+
+HISTSIZE=3000 # Nombre de lignes en mémoire
+HISTFILE=~/.zsh_history # Fichier de sauvegarde
+SAVEHIST=3000 # Nombre d'entrées à enregistrer
+HISTDUP=erase # Suppression des doublons
+setopt appendhistory # Ajoute des entrées en append
+setopt sharehistory # Partage de l'historique entre terminaux
+setopt incappendhistory # Ajout immédiat à l'historique (pas à la fermeture du terminal)
+setopt correct # Proposition de correction sur des frappes erronées
+
+## Install ZSH theme
+
+antigen theme https://github.com/bhilburn/powerlevel9k.git powerlevel9k
+
+## Configure the theme
+POWERLEVEL9K_EXTERNAL_SEGMENTS="${HOME}/.powerlevel9k/segments"
+
+POWERLEVEL9K_CUSTOM_OSX_ICON="echo -e '\ue711' "
+POWERLEVEL9K_CUSTOM_OSX_ICON_BACKGROUND=016
+POWERLEVEL9K_CUSTOM_OSX_ICON_FOREGROUND=015
+POWERLEVEL9K_SSH_ICON="\uf68c"
+
+POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX="\u256d\u2500 "
+POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="\u2570\uf460 "
+
+POWERLEVEL9K_TIME_FORMAT="%D{\ue383 %H:%M \uf073 %d/%m/%y}"
+
+# POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=178
+# POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=232
+# POWERLEVEL9K_DIR_DEFAULT_BACKGROUND=39
+# POWERLEVEL9K_DIR_DEFAULT_FOREGROUND=232
+# POWERLEVEL9K_DIR_HOME_BACKGROUND=39
+# POWERLEVEL9K_DIR_HOME_FOREGROUND=232
+# POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND=39
+# POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND=232
+# POWERLEVEL9K_STATUS_ERROR_BACKGROUND=8
+# POWERLEVEL9K_STATUS_ERROR_FOREGROUND=196
+# POWERLEVEL9K_STATUS_OK_BACKGROUND=8
+# POWERLEVEL9K_STATUS_OK_FOREGROUND=46
+# POWERLEVEL9K_TIME_FOREGROUND=232
+
+### Load custom segments
+
+source "${POWERLEVEL9K_EXTERNAL_SEGMENTS}/loader.zsh"
+load_segments 'docker'
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(custom_osx_icon ssh context dir dir_writable)
+else
+	POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(custom_osx_icon dir dir_writable vcs)
+fi
+
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs docker_version time)
+
+## Apply the ZSH configuration
+
+antigen apply
+
+# Configure Ruby
+
+source /usr/local/share/chruby/chruby.sh
+source /usr/local/share/chruby/auto.sh
+chruby ruby-2.4.1
+
+# Load NVM
+
+source "/usr/local/opt/nvm/nvm.sh"
+
+# Load the profile if exists
+
+if test -e "$HOME/.profile"; then
+  source "$HOME/.profile"
+fi
