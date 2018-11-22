@@ -110,12 +110,12 @@ POWERLEVEL9K_SYMFONY_VERSION_BACKGROUND='black'
 # POWERLEVEL9K_TIME_FOREGROUND=232
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon ssh context dir dir_writable)
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(ssh context dir dir_writable)
 else
-    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon dir dir_writable vcs newline symfony2_version)
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable command_execution_time status newline vcs)
 fi
 
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time status background_jobs docker_version time)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(symfony2_version docker_version time)
 
 # =============================================================================
 #                                   Startup
