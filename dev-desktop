@@ -14,9 +14,9 @@ source "./functions"
 title_echo "General"
 
 if [ ! -d "$HOME/bin" ]; then
-    progress_echo "Create bin directory"
+  progress_echo "Create bin directory"
 	mkdir "$HOME/bin"
-    success_echo
+  success_echo
 fi
 
 title_echo "Homebrew"
@@ -34,20 +34,20 @@ fi
 if [ -x /usr/local/bin/brew ]; then 
     progress_echo "Check installation"
     if brew doctor >> $LOGFILE 2>&1; then
-        success_echo "Your Homebrew installation is good to go"
+      success_echo "Your Homebrew installation is good to go"
     else
-        fail_echo "Your Homebrew installation reported some errors or warnings, please review the Homebrew messages to see if any action is needed."
+      fail_echo "Your Homebrew installation reported some errors or warnings, please review the Homebrew messages to see if any action is needed."
     fi
 
     if [ -e "$BREWFILE" ]; then
         progress_echo "Install formulas and casks"
 
         if brew bundle --file="$BREWFILE" >> $LOGFILE; then
-            success_echo "All formulas and casks were installed successfully"
+          success_echo "All formulas and casks were installed successfully"
         else
-            fail_echo "Some formulas or casks failed to install"
-            message_echo "This is usually due to one of the Mac apps being already installed,"
-            message_echo "in which case, you can ignore these errors."
+          fail_echo "Some formulas or casks failed to install"
+          message_echo "This is usually due to one of the Mac apps being already installed,"
+          message_echo "in which case, you can ignore these errors."
         fi
     fi
 fi
@@ -56,28 +56,27 @@ title_echo "Shell"
 
 progress_echo "Check zsh is the default shell"
 if [ $SHELL != "/bin/zsh" ]; then
-    fail_echo
-    progress_echo "Set zsh as default shell"
-    chsh -s /bin/zsh
-    success_echo
+  fail_echo
+  progress_echo "Set zsh as default shell"
+  chsh -s /bin/zsh
+  success_echo
 else
-    success_echo
+  success_echo
 fi
 
 progress_echo "Configure ZSH"
 
 if [ ! -f ~/.zshrc ]; then
-    mv dotfiles/zshrc ~/.zshrc
+  mv dotfiles/zshrc ~/.zshrc
 fi
 
 mv -f dotfiles/profile ~/.profile
 
 if [ -d ~/.powerlevel9k ]; then
-    mv -f ~/.powerlevel9k ~/.Trash/powerlevel9k
+  mv -f ~/.powerlevel9k ~/.Trash/powerlevel9k
 fi
 
 mv -f dotfiles/powerlevel9k ~/.powerlevel9k
-
 success_echo
 
 if [ ! -f "$HOME/.ssh/id_rsa" ]; then
@@ -101,33 +100,33 @@ progress_echo "Check PHP's package manager"
 brew_formula_php=$(brew list | egrep '^php(@(\d{1,}\.?){2})?$')
 
 if [ -z $brew_formula_php ]; then
-    message_echo "Apple"
+  message_echo "Apple"
 else
-    success_echo "Homebrew, formula $brew_formula_php installed"
+  success_echo "Homebrew, formula $brew_formula_php installed"
 fi
 
 ## Composer
 
 if [ ! -e /usr/local/bin/composer ]; then
-    progress_echo "Install composer"
-    EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" >> $LOGFILE
-    ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")"
+  progress_echo "Install composer"
+  EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
+  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" >> $LOGFILE
+  ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")"
 
-    if [ "$EXPECTED_SIGNATURE" == "$ACTUAL_SIGNATURE" ]; then
-        php composer-setup.php --quiet >> $LOGFILE
-        mv composer.phar /usr/local/bin/composer
-        success_echo
-    else
-        >&2 echo 'ERROR: Invalid installer signature'
-        fail_echo
-    fi
-
-    rm composer-setup.php
-else
-    progress_echo "Update composer"
-    @composer selfupdate >> $LOGFILE 2>&1
+  if [ "$EXPECTED_SIGNATURE" == "$ACTUAL_SIGNATURE" ]; then
+    php composer-setup.php --quiet >> $LOGFILE
+    mv composer.phar /usr/local/bin/composer
     success_echo
+  else
+    >&2 echo 'ERROR: Invalid installer signature'
+    fail_echo
+  fi
+
+  rm composer-setup.php
+else
+  progress_echo "Update composer"
+  @composer selfupdate >> $LOGFILE 2>&1
+  success_echo
 fi
 
 ## vim
@@ -135,3 +134,26 @@ fi
 progress_echo "Configure vim"
 mv -f dotfiles/vimrc ~/.vimrc
 success_echo
+
+## dnsmasq
+if [ ! -f "/usr/local/etc/dnsmasq.conf" ]; then
+  # See https://passingcuriosity.com/2013/dnsmasq-dev-osx/
+  progress_echo "Configuring Dnsmasq ..."
+
+  # Copy the default configuration file
+  cp $(brew list dnsmasq | grep /dnsmasq.conf.example$) $dns_file
+
+
+  # Copy the daemon configuration file into place
+  sudo cp $(brew list dnsmasq | grep /homebrew.mxcl.dnsmasq.plist$) /Library/LaunchDaemons/ #missing filename ? didnt write anything
+  append_to_file "$dns_file" "address=/local/127.0.0.1\n"
+
+  if [ ! -d "/etc/resolver" ]; then
+    sudo mkdir -p /etc/resolver
+  fi
+
+  sudo tee "/etc/resolver/local" >/dev/null <<EOF
+  nameserver 127.0.0.1
+EOF
+  success_echo
+fi
