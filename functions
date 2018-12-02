@@ -28,3 +28,13 @@ message_echo() {
 brew_formula_check() {
   brew list -1 | grep -Fqx "$1"
 }
+
+append_to_file() {
+  local file="$1"
+  local text="$2"
+
+  # Add the text in the file if it does not exist
+  if ! grep -qs "^$text$" "$file"; then
+    printf "\n%s" "$text" >> "$file"
+  fi
+}
