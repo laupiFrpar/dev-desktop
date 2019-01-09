@@ -31,7 +31,7 @@ else
   success_echo
 fi
 
-if [ -x /usr/local/bin/brew ]; then 
+if [ -x /usr/local/bin/brew ]; then
     progress_echo "Check installation"
     if brew doctor >> $LOGFILE 2>&1; then
       success_echo "Your Homebrew installation is good to go"
@@ -77,6 +77,7 @@ if [ -d ~/.powerlevel9k ]; then
 fi
 
 mv -f dotfiles/powerlevel9k ~/.powerlevel9k
+mv -f dotfiles/powerlevel9krc ~/.powerlevel9krc
 success_echo
 
 if [ ! -f "$HOME/.ssh/id_rsa" ]; then
