@@ -19,6 +19,10 @@ if [ ! -d "$HOME/bin" ]; then
   success_echo
 fi
 
+#######################################
+# Brew
+#######################################
+
 title_echo "Homebrew"
 
 if ! command -v brew >/dev/null; then
@@ -54,6 +58,10 @@ fi
 
 title_echo "Shell"
 
+#######################################
+# Zsh
+#######################################
+
 progress_echo "Check zsh is the default shell"
 if [ $SHELL != "/bin/zsh" ]; then
   fail_echo
@@ -80,6 +88,10 @@ mv -f dotfiles/powerlevel9k ~/.powerlevel9k
 mv -f dotfiles/powerlevel9krc ~/.powerlevel9krc
 success_echo
 
+#######################################
+# SSH
+#######################################
+
 if [ ! -f "$HOME/.ssh/id_rsa" ]; then
   progress_echo "Configure SSH"
   echo -n "\nYour email : "
@@ -88,13 +100,18 @@ if [ ! -f "$HOME/.ssh/id_rsa" ]; then
   success_echo
 fi
 
+#######################################
+# Git
+#######################################
 progress_echo "Configure Git"
 mv -f dotfiles/gitconfig ~/.gitconfig
 success_echo
 
 title_echo "Development"
 
-## PHP
+#######################################
+# PHP
+#######################################
 
 message_echo "Check PHP version $(php -v | egrep 'PHP (\d{1,}\.?){2,3}' | awk '{ print $2 }')"
 progress_echo "Check PHP's package manager"
@@ -106,7 +123,9 @@ else
   success_echo "Homebrew, formula $brew_formula_php installed"
 fi
 
-## Composer
+#######################################
+# Composer
+#######################################
 
 if [ ! -e /usr/local/bin/composer ]; then
   progress_echo "Install composer"
@@ -130,44 +149,25 @@ else
   success_echo
 fi
 
-## vim
+#######################################
+# vim
+#######################################
 
 progress_echo "Configure vim"
 mv -f dotfiles/vimrc ~/.vimrc
 success_echo
 
-## dnsmasq
+#######################################
+# Symfony Cli
+#######################################
 
-# See https://passingcuriosity.com/2013/dnsmasq-dev-osx/
-progress_echo "Configuring Dnsmasq ..."
-dns_file="/usr/local/etc/dnsmasq.conf"
-if [ ! -f "$dns_file" ]; then
-  # Copy the default configuration file
-  cp $(brew list dnsmasq | grep /dnsmasq.conf$) "$dns_file"
+if [ -f /usr/local/bin/symfony ]; then
+  progress_echo "Remove existing symfony client ..."
+  rm /usr/local/bin/symfony
+  success_echo
 fi
 
-# Check if the local domain is not added in the dnsmasq.conf
-if ! grep -q "address=/local/127.0.0.1" "$dns_file"; then
-  append_to_file "$dns_file" "address=/local/127.0.0.1"
-fi
-  # Add the local domain in the file
-  # append_to_file "$dns_file" "address=/local/127.0.0.1\n"
-
-# Check if the resolver local exists
-if [ ! -f "/etc/resolver/local" ]; then
-  # Create a resolver file named local
-  if [ ! -d "/etc/resolver" ]; then
-    sudo mkdir -p /etc/resolver
-  fi
-
-  sudo tee "/etc/resolver/local" >/dev/null <<EOF
-  nameserver 127.0.0.1
-EOF
-fi
-
-# Check if the service is not started
-if ! brew services list | egrep -q "dnsmasq\s+started" ; then
-  sudo brew services start dnsmasq
-fi
-
+progress_echo "Installing Symfony client ..."
+curl -sS https://get.symfony.com/cli/installer | bash
+mv /Users/pllaunay/.symfony/bin/symfony /usr/local/bin/symfony
 success_echo
