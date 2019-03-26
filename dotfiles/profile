@@ -8,7 +8,6 @@
 
 brew_path=$(brew --prefix)
 
-# export EDITOR="subl -w"
 # export NVM_DIR="$HOME/.nvm"
 export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$brew_path/bin:$brew_path/sbin:$PATH"
 export THEME="xterm-256color"
