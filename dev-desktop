@@ -81,7 +81,7 @@ fi
 mv -f dotfiles/profile ~/.profile
 
 if [ -d ~/.powerlevel9k ]; then
-  mv -f ~/.powerlevel9k ~/.Trash/powerlevel9k
+  mv -f ~/.powerlevel9k ~/.Trash/powerlevel9k-$(date +"%Y%m%d%H%M%S")
 fi
 
 mv -f dotfiles/powerlevel9k ~/.powerlevel9k
@@ -162,14 +162,14 @@ success_echo
 #######################################
 
 if [ -f /usr/local/bin/symfony ]; then
-  progress_echo "Remove existing symfony client ..."
-  rm /usr/local/bin/symfony
-  success_echo
+  progress_echo "Updating symfony client ..."
+  symfony self:update
+else
+  progress_echo "Installing Symfony client ..."
+  curl -sS https://get.symfony.com/cli/installer | bash
+  mv /Users/pllaunay/.symfony/bin/symfony /usr/local/bin/symfony
 fi
 
-progress_echo "Installing Symfony client ..."
-curl -sS https://get.symfony.com/cli/installer | bash
-mv /Users/pllaunay/.symfony/bin/symfony /usr/local/bin/symfony
 success_echo
 
 #######################################
