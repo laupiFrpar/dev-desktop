@@ -171,3 +171,13 @@ progress_echo "Installing Symfony client ..."
 curl -sS https://get.symfony.com/cli/installer | bash
 mv /Users/pllaunay/.symfony/bin/symfony /usr/local/bin/symfony
 success_echo
+
+#######################################
+# Node version manager - NVM
+#######################################
+
+if [ ! -d $HOME/.nvm ]; then
+  progress_echo "Create NVM dir ..."
+  mkdir $HOME/.nvm
+  success_echo
+fi;

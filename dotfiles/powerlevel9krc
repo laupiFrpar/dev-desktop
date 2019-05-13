@@ -43,7 +43,7 @@ else
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable date time_joined background_jobs command_execution_time_joined status_joined newline vcs)
 fi
 
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(docker_version php_version symfony2_version)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(docker_version node_version php_version symfony2_version)
 
 ## Time customization
 POWERLEVEL9K_TIME_BACKGROUND="black"
