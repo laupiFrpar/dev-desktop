@@ -181,3 +181,9 @@ if [ ! -d $HOME/.nvm ]; then
   mkdir $HOME/.nvm
   success_echo
 fi;
+
+progress_echo "Install node's latest version and npm's latest version ..."
+nvm install node --latest-npm
+nvm alias default node
+mv -f dotfiles/nvm-load ~/.nvm-load
+success_echo

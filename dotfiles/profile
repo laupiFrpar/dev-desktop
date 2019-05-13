@@ -84,6 +84,7 @@ antigen apply
 ## Load NVM
 if [ -e "$brew_path/opt/nvm/nvm.sh" ]; then
     source "$brew_path/opt/nvm/nvm.sh"
+    source "${HOME}/.nvm-load"
 fi
 
 ## Load the iterm2 integration
