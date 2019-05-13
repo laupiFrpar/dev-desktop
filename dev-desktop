@@ -183,6 +183,7 @@ if [ ! -d $HOME/.nvm ]; then
 fi;
 
 progress_echo "Install node's latest version and npm's latest version ..."
+source "$(brew --prefix nvm)/nvm.sh"
 nvm install node --latest-npm
 nvm alias default node
 mv -f dotfiles/nvm-load ~/.nvm-load
