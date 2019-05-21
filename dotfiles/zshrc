@@ -2,3 +2,8 @@
 if [ -e "$HOME/.profile" ]; then
     source "$HOME/.profile"
 fi
+
+## Load extra profile
+if [ -e "$HOME/.extra-profile" ]; then
+    source "$HOME/.extra-profile"
+fi
