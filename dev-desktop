@@ -158,6 +158,24 @@ mv -f dotfiles/vimrc ~/.vimrc
 success_echo
 
 #######################################
+# PHPBrew
+#######################################
+
+if [ -f /usr/local/bin/phpbrew ]; then
+  progress_echo "Updating phpbrew tool ..."
+  phpbrew self-update
+else
+  progress_echo "Installing PHPBrew tool ..."
+  curl -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew
+  chmod +x phpbrew
+  sudo mv phpbrew /usr/local/bin/phpbrew
+  cd $HOME
+  phpbrew init
+fi
+
+success_echo
+
+#######################################
 # Symfony Cli
 #######################################
 

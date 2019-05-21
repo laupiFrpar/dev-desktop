@@ -11,7 +11,7 @@ brew_path=$(brew --prefix)
 export CPPFLAGS="-I/usr/local/opt/libxml2/include -I/usr/local/opt/openssl/include -I/usr/local/opt/icu4c/include -I/usr/local/opt/gd/include -I/opt/X11/include"
 export LDFLAGS="-L/usr/local/opt/libxml2/lib -L/usr/local/opt/openssl/lib -L/usr/local/opt/icu4c/lib -L/usr/local/opt/gd/lib"
 export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$brew_path/bin:$brew_path/sbin:$PATH"
-export PHP_INI_SCAN_DIR=":/Users/pl.launay/workspace/config/php"
+export PHP_INI_SCAN_DIR=":$HOME/workspace/config/php"
 export PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig:/usr/local/opt/libxml2/lib/pkgconfig:/usr/local/opt/openssl/lib/pkgconfig:/usr/local/opt/gd/lib/pkgconfig"
 export NVM_DIR=~/.nvm
 export THEME="xterm-256color"
@@ -90,4 +90,9 @@ fi
 ## Load the iterm2 integration
 if [ -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
     source "${HOME}/.iterm2_shell_integration.zsh"
+fi
+
+## Load PHPBrew
+if [ -e "${HOME}/.phpbrew/bashrc" ]; then
+    source "${HOME}/.phpbrew/bashrc"
 fi
