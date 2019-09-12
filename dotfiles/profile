@@ -8,6 +8,10 @@
 
 brew_path=$(brew --prefix)
 
+export BLACKFIRE_CLIENT_ID=f714295c-a41b-4c4f-8dc8-f0303e2dfe46
+export BLACKFIRE_CLIENT_TOKEN=d3db310fa3e7c4f26ab90b1fabef9a542ba01b20df9c7472b0e3545e1b53e691
+export BLACKFIRE_SERVER_ID=fe3b3a17-2895-4f18-a5da-d02e05fc2400
+export BLACKFIRE_SERVER_TOKEN=ab4b78901d08638cba0e01359d119e4f4397dc2d024f010fa398db683a8879c6
 export NVM_AUTO_USE=true
 export NVM_DIR="$HOME/.nvm"
 export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$brew_path/bin:$brew_path/sbin:$PATH"
