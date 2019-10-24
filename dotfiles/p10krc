@@ -1,0 +1,13 @@
+## Global configuration
+POWERLEVEL9K_MODE="nerdfont-complete"
+
+## Command execution time customization
+POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0
+
+## Node version customization
+POWERLEVEL9K_NODE_VERSION_PROJECT_ONLY=false
+
+## Rbenv customization
+POWERLEVEL9K_RBENV_PROMPT_ALWAYS_SHOW=true
+
+source ~/.p10k.zsh

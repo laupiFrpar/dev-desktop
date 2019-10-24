@@ -81,11 +81,11 @@ fi
 mv -f dotfiles/profile ~/.profile
 
 if [ -d ~/.powerlevel9k ]; then
-  mv -f ~/.powerlevel9k ~/.Trash/powerlevel9k-$(date +"%Y%m%d%H%M%S")
+  rm -rf ~/.powerlevel9k ~/.powerlevel9krc
 fi
 
-mv -f dotfiles/powerlevel9k ~/.powerlevel9k
-mv -f dotfiles/powerlevel9krc ~/.powerlevel9krc
+mv -f dotfiles/p10krc ~/.p10krc
+mv -f dotfiles/p10k.zsh ~/.p10k.zsh
 success_echo
 
 #######################################

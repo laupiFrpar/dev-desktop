@@ -39,7 +39,7 @@ antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-syntax-highlighting
 
 ## Install ZSH theme
-antigen theme https://github.com/bhilburn/powerlevel9k.git powerlevel9k
+antigen theme romkatv/powerlevel10k
 
 # =============================================================================
 #                                   Options
@@ -47,14 +47,14 @@ antigen theme https://github.com/bhilburn/powerlevel9k.git powerlevel9k
 
 ## History
 
-HISTSIZE=3000 # Nombre de lignes en mémoire
+HISTSIZE=3000           # Nombre de lignes en mémoire
 HISTFILE=~/.zsh_history # Fichier de sauvegarde
-SAVEHIST=3000 # Nombre d'entrées à enregistrer
-HISTDUP=erase # Suppression des doublons
-setopt appendhistory # Ajoute des entrées en append
-setopt sharehistory # Partage de l'historique entre terminaux
+SAVEHIST=3000           # Nombre d'entrées à enregistrer
+HISTDUP=erase           # Suppression des doublons
+setopt appendhistory    # Ajoute des entrées en append
+setopt sharehistory     # Partage de l'historique entre terminaux
 setopt incappendhistory # Ajout immédiat à l'historique (pas à la fermeture du terminal)
-setopt correct # Proposition de correction sur des frappes erronées
+setopt correct          # Proposition de correction sur des frappes erronées
 
 # =============================================================================
 #                                   Aliases
@@ -71,7 +71,7 @@ alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/d
 #                                   Configuration
 # =============================================================================
 
-source "${HOME}/.powerlevel9krc"
+source ~/.p10krc
 
 # =============================================================================
 #                                   Startup
