@@ -2,9 +2,28 @@ tap 'homebrew/bundle'
 tap 'homebrew/core'
 tap 'homebrew/services'
 
+# System base
 brew 'antigen'
 brew 'git'
-brew 'nvm'
 brew 'wget'
-brew 'yarn', args: ['ignore-dependencies']
 brew 'zsh'
+
+# PHPBrew base
+brew 'automake'
+brew 'bison'
+brew 'curl'
+brew 'gmp'
+brew 'icu4c'
+brew 'jpeg'
+brew 'libevent'
+brew 'libtool'
+brew 'libxml2'
+brew 'mcrypt'
+brew 'openssl'
+brew 're2c'
+
+#
+brew 'bzip2'
+brew 'gd'
+brew 'imagemagick'
+brew 'zlib'
