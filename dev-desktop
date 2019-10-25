@@ -110,20 +110,6 @@ success_echo
 title_echo "Development"
 
 #######################################
-# PHP
-#######################################
-
-message_echo "Check PHP version $(php -v | egrep 'PHP (\d{1,}\.?){2,3}' | awk '{ print $2 }')"
-progress_echo "Check PHP's package manager"
-brew_formula_php=$(brew list | egrep '^php(@(\d{1,}\.?){2})?$')
-
-if [ -z $brew_formula_php ]; then
-  message_echo "Apple"
-else
-  success_echo "Homebrew, formula $brew_formula_php installed"
-fi
-
-#######################################
 # Composer
 #######################################
 
@@ -158,8 +144,10 @@ mv -f dotfiles/vimrc ~/.vimrc
 success_echo
 
 #######################################
-# PHPBrew
+# PHP
 #######################################
+
+message_echo "Check PHP version $(php -v | egrep 'PHP (\d{1,}\.?){2,3}' | awk '{ print $2 }')"
 
 if [ -f /usr/local/bin/phpbrew ]; then
   progress_echo "Updating phpbrew tool ..."
@@ -188,19 +176,4 @@ else
   mv /Users/pllaunay/.symfony/bin/symfony /usr/local/bin/symfony
 fi
 
-success_echo
-
-#######################################
-# Node version manager - NVM
-#######################################
-
-if [ ! -d $HOME/.nvm ]; then
-  progress_echo "Create NVM dir ..."
-  mkdir $HOME/.nvm
-  success_echo
-fi;
-
-progress_echo "Install node's latest version and npm's latest version ..."
-nvm install node --latest-npm
-nvm alias default node
 success_echo
