@@ -10,4 +10,33 @@ POWERLEVEL9K_NODE_VERSION_PROJECT_ONLY=false
 ## Rbenv customization
 POWERLEVEL9K_RBENV_PROMPT_ALWAYS_SHOW=true
 
+# DOCKER
+# Show current Docker version and connected machine
+prompt_docker_version() {
+  # if docker daemon isn't running you'll get an error saying it can't connect
+  docker info 2>&1 | grep -q "Cannot connect" && return
+
+  local docker_version
+  docker_version=$(docker version -f "{{.Server.Version}}")
+
+  p10k segment -i '' -f blue -t ${docker_version}
+}
+
+prompt_php_version_custom() {
+  local php_version
+  php_version=$(php -v 2>&1 | grep "^PHP" | cut -d' ' -f2)
+
+  if [[ -n "$php_version" ]]; then
+    p10k segment -i '' -f blue -t ${php_version}
+  fi
+}
+
+prompt_symfony_version() {
+  if [[ -f app/bootstrap.php.cache ]]; then
+    local symfony_version
+    symfony_version=$(grep " VERSION " app/bootstrap.php.cache | sed -e 's/[^.0-9]*//g')
+    p10k segment -i '' -f white -t ${symfony_version}
+  fi
+}
+
 source ~/.p10k.zsh
