@@ -80,11 +80,10 @@ fi
 
 mv -f dotfiles/profile ~/.profile
 
-if [ -d ~/.powerlevel9k ]; then
-  rm -rf ~/.powerlevel9k ~/.powerlevel9krc
+if [ -d ~/.p10krc ]; then
+  rm -rf ~/.p10krc
 fi
 
-mv -f dotfiles/p10krc ~/.p10krc
 mv -f dotfiles/p10k.zsh ~/.p10k.zsh
 success_echo
 

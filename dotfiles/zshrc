@@ -1,3 +1,4 @@
+#!/usr/bin/zsh
 ## Load the profile
 if [ -e "$HOME/.profile" ]; then
     source "$HOME/.profile"
