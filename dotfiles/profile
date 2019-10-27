@@ -11,7 +11,7 @@ brew_path=$(brew --prefix)
 
 export NVM_AUTO_USE=true
 export NVM_DIR="$HOME/.nvm"
-export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$brew_path/bin:$brew_path/sbin:$PATH"
+export PATH="$HOME/bin:$HOME/.composer/vendor/bin:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$brew_path/bin:$brew_path/sbin:$PATH"
 export PHP_INI_SCAN_DIR=":$HOME/workspace/config/php"
 export THEME="xterm-256color"
 

@@ -2,6 +2,8 @@
 
 LOGFILE=~/.dev-desktop.log
 BREWFILE=./Brewfile
+errorMessages=""
+error=false
 
 if [ -e "$LOGFILE" ]; then
     rm "$LOGFILE"
@@ -40,18 +42,22 @@ if [ -x /usr/local/bin/brew ]; then
     if brew doctor >> $LOGFILE 2>&1; then
       success_echo "Your Homebrew installation is good to go"
     else
-      fail_echo "Your Homebrew installation reported some errors or warnings, please review the Homebrew messages to see if any action is needed."
+      fail_echo
+      error=true
+      errorMessages='\nYour Homebrew installation reported some errors or warnings, please review the Homebrew messages to see if any action is needed.'
     fi
 
     if [ -e "$BREWFILE" ]; then
         progress_echo "Install formulas and casks"
 
         if brew bundle --file="$BREWFILE" >> $LOGFILE; then
-          success_echo "All formulas and casks were installed successfully"
+          success_echo
         else
-          fail_echo "Some formulas or casks failed to install"
-          message_echo "This is usually due to one of the Mac apps being already installed,"
-          message_echo "in which case, you can ignore these errors."
+          error=true
+          fail_echo
+          errorMessages="${errorMessages}Some formulas or casks failed to install"
+          errorMessages="${errorMessages}\n\tThis is usually due to one of the Mac apps being already installed,"
+          errorMessages="${errorMessages}\n\tin which case, you can ignore these errors."
         fi
     fi
 fi
@@ -59,12 +65,30 @@ fi
 title_echo "Shell"
 
 #######################################
+# Git
+#######################################
+progress_echo "Configure Git"
+mv -f dotfiles/gitconfig ~/.gitconfig
+success_echo
+
+#######################################
+# SSH
+#######################################
+
+if [ ! -f "$HOME/.ssh/id_rsa" ]; then
+  progress_echo "Configure SSH"
+  echo -n "\nYour email : "
+  read -r email
+  ssh-keygen -t rsa -b 4096 -C "$email"
+  success_echo
+fi
+
+#######################################
 # Zsh
 #######################################
 
 progress_echo "Check zsh is the default shell"
 if [ $SHELL != "/bin/zsh" ]; then
-  fail_echo
   progress_echo "Set zsh as default shell"
   chsh -s /bin/zsh
   success_echo
@@ -87,25 +111,6 @@ fi
 mv -f dotfiles/p10k.zsh ~/.p10k.zsh
 success_echo
 
-#######################################
-# SSH
-#######################################
-
-if [ ! -f "$HOME/.ssh/id_rsa" ]; then
-  progress_echo "Configure SSH"
-  echo -n "\nYour email : "
-  read -r email
-  ssh-keygen -t rsa -b 4096 -C "$email"
-  success_echo
-fi
-
-#######################################
-# Git
-#######################################
-progress_echo "Configure Git"
-mv -f dotfiles/gitconfig ~/.gitconfig
-success_echo
-
 title_echo "Development"
 
 #######################################
@@ -123,24 +128,17 @@ if [ ! -e /usr/local/bin/composer ]; then
     mv composer.phar /usr/local/bin/composer
     success_echo
   else
-    >&2 echo 'ERROR: Invalid installer signature'
+    error=true
+    errorMessages"${errorMessages}\nComposer error: Invalid installer signature"
     fail_echo
   fi
 
   rm composer-setup.php
 else
   progress_echo "Update composer"
-  @composer selfupdate >> $LOGFILE 2>&1
+  composer selfupdate >> $LOGFILE 2>&1
   success_echo
 fi
-
-#######################################
-# vim
-#######################################
-
-progress_echo "Configure vim"
-mv -f dotfiles/vimrc ~/.vimrc
-success_echo
 
 #######################################
 # PHP
@@ -150,14 +148,14 @@ message_echo "Check PHP version $(php -v | egrep 'PHP (\d{1,}\.?){2,3}' | awk '{
 
 if [ -f /usr/local/bin/phpbrew ]; then
   progress_echo "Updating phpbrew tool ..."
-  phpbrew self-update
+  phpbrew self-update >> $LOGFILE 2>&1
 else
   progress_echo "Installing PHPBrew tool ..."
-  curl -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew
+  curl -sS -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew >> $LOGFILE 2>&1
   chmod +x phpbrew
   sudo mv phpbrew /usr/local/bin/phpbrew
   cd $HOME
-  phpbrew init
+  phpbrew init >> $LOGFILE 2>&1
 fi
 
 success_echo
@@ -168,11 +166,37 @@ success_echo
 
 if [ -f /usr/local/bin/symfony ]; then
   progress_echo "Updating symfony client ..."
-  symfony self:update
+  symfony self:update >> $LOGFILE 2>&1
 else
   progress_echo "Installing Symfony client ..."
-  curl -sS https://get.symfony.com/cli/installer | bash
+  curl -sS https://get.symfony.com/cli/ | bash >> $LOGFILE 2>&1
   mv /Users/pllaunay/.symfony/bin/symfony /usr/local/bin/symfony
 fi
 
 success_echo
+
+#######################################
+# vim
+#######################################
+
+progress_echo "Configure vim"
+mv -f dotfiles/vimrc ~/.vimrc
+success_echo
+
+#######################################
+# Yarn
+#######################################
+
+if [ -d ~/.yarn ]; then
+  progress_echo "Update Yarn"
+else
+  progress_echo "Install Yarn"
+fi
+
+curl -sS -L https://yarnpkg.com/install.sh | bash >> $LOGFILE 2>&1
+success_echo
+
+if [ ${error} = true ]; then
+  message_echo "\nErrors:"
+  echo -e "${errorMessages}"
+fi
