@@ -48,8 +48,8 @@
       # kubecontext             # current kubernetes context (https://kubernetes.io/)
       # nodenv                  # node.js version from nodenv (https://github.com/nodenv/nodenv)
       # nodeenv                 # node.js environment (https://github.com/ekalinin/nodeenv)
-      # node_version            # node.js version
-      nvm                     # node.js version from nvm (https://github.com/nvm-sh/nvm)
+      node_version            # node.js version
+      # nvm                     # node.js version from nvm (https://github.com/nvm-sh/nvm)
       php                     # PHP version
       # pyenv                   # python environment (https://github.com/pyenv/pyenv)
       # rbenv                   # ruby version from rbenv (https://github.com/rbenv/rbenv)
