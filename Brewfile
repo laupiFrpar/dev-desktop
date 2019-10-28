@@ -29,3 +29,6 @@ brew 'imagemagick'
 brew 'libyaml'
 brew 'libzip'
 brew 'zlib'
+
+# Ruby
+brew 'rbenv'
