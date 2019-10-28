@@ -90,3 +90,5 @@ fi
 if [ -e "${HOME}/.phpbrew/bashrc" ]; then
     source "${HOME}/.phpbrew/bashrc"
 fi
+
+eval "$(rbenv init -)"

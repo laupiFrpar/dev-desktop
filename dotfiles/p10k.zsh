@@ -52,7 +52,7 @@
       # nvm                     # node.js version from nvm (https://github.com/nvm-sh/nvm)
       php                     # PHP version
       # pyenv                   # python environment (https://github.com/pyenv/pyenv)
-      # rbenv                   # ruby version from rbenv (https://github.com/rbenv/rbenv)
+      rbenv                   # ruby version from rbenv (https://github.com/rbenv/rbenv)
       # rust_version            # rustc version (https://www.rust-lang.org)
       # rvm                     # ruby version from rvm (https://rvm.io)
       symfony                 # Symfony version
