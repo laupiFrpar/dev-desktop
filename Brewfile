@@ -6,7 +6,6 @@ tap 'homebrew/services'
 brew 'antigen'
 brew 'git'
 brew 'wget'
-brew 'zsh'
 
 # PHPBrew base
 brew 'automake'
