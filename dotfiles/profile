@@ -34,6 +34,7 @@ antigen use oh-my-zsh
 ## Install zsh plugins
 
 antigen bundle brew
+antigen bundle caniuse
 antigen bundle colored-man-pages
 antigen bundle docker
 antigen bundle docker-compose
@@ -41,9 +42,9 @@ antigen bundle git
 antigen bundle lukechilds/zsh-nvm
 antigen bundle voronkovich/symfony.plugin.zsh
 antigen bundle z
+antigen bundle zdharma/fast-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
-antigen bundle zsh-users/zsh-syntax-highlighting
 
 ## Install ZSH theme
 antigen theme romkatv/powerlevel10k
