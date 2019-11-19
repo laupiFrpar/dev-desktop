@@ -164,16 +164,12 @@ success_echo
 # Symfony Cli
 #######################################
 
-if [ -f /usr/local/bin/symfony ]; then
-  progress_echo "Updating symfony client ..."
-  symfony self:update >> $LOGFILE 2>&1
-else
+if [ ! -f /usr/local/bin/symfony ]; then
   progress_echo "Installing Symfony client ..."
   curl -sS https://get.symfony.com/cli/ | bash >> $LOGFILE 2>&1
   mv /Users/pllaunay/.symfony/bin/symfony /usr/local/bin/symfony
+  success_echo
 fi
-
-success_echo
 
 #######################################
 # vim
