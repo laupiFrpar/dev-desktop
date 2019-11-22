@@ -35,6 +35,7 @@ antigen use oh-my-zsh
 
 antigen bundle brew
 antigen bundle caniuse
+antigen bundle caarlos0/open-pr
 antigen bundle colored-man-pages
 antigen bundle docker
 antigen bundle docker-compose
