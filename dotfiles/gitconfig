@@ -1,11 +1,11 @@
 [alias]
-    co = checkout
     br = branch
+    cc = !git branch --merged | egrep -v \"(\\*|master|develop)\" | xargs git branch -d
     ci = commit
+    co = checkout
+    pr = !git push origin HEAD && open-pr
     st = status
     add-conflicted-files = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`"
-    del-merged-branch = !git branch --merged | egrep -v \"(\\*|master|develop)\" | xargs git branch -d
-    cc = !git branch --merged | egrep -v \"(\\*|master|develop)\" | xargs git branch -d
     edit-conflicted-files = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; $EDITOR `f`"
 
 [user]
