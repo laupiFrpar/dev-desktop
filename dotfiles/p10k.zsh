@@ -800,7 +800,7 @@
     # if docker daemon isn't running you'll get an error saying it can't connect
     local launched=$(docker info 2>&1 | grep "Cannot connect")
 
-    if [ -n ${launched} ]; then
+    if [[ -n ${launched} ]]; then
       p10k segment -i '' -f blue -t 'Not launched'
     else
       p10k segment -i '' -f blue -t $(docker version -f "{{.Server.Version}}")
