@@ -5,6 +5,7 @@ tap 'homebrew/services'
 # System base
 brew 'antigen'
 brew 'git'
+brew 'hub'
 brew 'wget'
 
 # PHPBrew base
