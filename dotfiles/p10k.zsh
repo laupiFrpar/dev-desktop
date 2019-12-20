@@ -36,7 +36,6 @@
       os_icon                 # os identifier
       context                 # user@hostname
       dir                     # current directory
-      vcs                     # git status
       # =========================[ Line #2 ]=========================
       newline
       # anaconda                # conda environment (https://conda.io/)
@@ -61,6 +60,9 @@
       # virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
       # =========================[ Line #3 ]=========================
       newline
+      vcs                     # git status
+      # =========================[ Line #4 ]=========================
+      newline
       prompt_char             # prompt symbol
   )
 
@@ -82,6 +84,8 @@
       # proxy                   # system-wide http/https/ftp proxy
       # public_ip               # public IP address
       # =========================[ Line #3 ]=========================
+      newline
+      # =========================[ Line #4 ]=========================
       newline
       status                  # exit code of the last command
       command_execution_time  # duration of the last command
@@ -366,7 +370,7 @@
 
     # If local branch name or tag is at most 32 characters long, show it in full.
     # Otherwise show the first 12 … the last 12.
-    (( $#where > 32 )) && where[13,-13]="…"
+    # (( $#where > 32 )) && where[13,-13]="…"
     res+="${clean}${where//\%/%%}"  # escape %
 
     # Show tracking branch name if it differs from local branch.
