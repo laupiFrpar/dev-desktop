@@ -3,7 +3,7 @@
     cc = !git branch --merged | egrep -v \"(\\*|master|develop)\" | xargs git branch -d
     ci = commit
     co = checkout
-    pr = !git push origin HEAD && open-pr
+    ru = remote update
     st = status
     add-conflicted-files = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`"
     edit-conflicted-files = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; $EDITOR `f`"
