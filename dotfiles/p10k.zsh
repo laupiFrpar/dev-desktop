@@ -33,11 +33,6 @@
   # The list of segments shown on the left. Fill it with the most important segments.
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
       # =========================[ Line #1 ]=========================
-      os_icon                 # os identifier
-      context                 # user@hostname
-      dir                     # current directory
-      # =========================[ Line #2 ]=========================
-      newline
       # anaconda                # conda environment (https://conda.io/)
       # aws                     # aws profile (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html)
       # aws_eb_env              # aws elastic beanstalk environment (https://aws.amazon.com/elasticbeanstalk/)
@@ -58,6 +53,11 @@
       symfony                 # Symfony version
       # terraform               # terraform workspace (https://www.terraform.io)
       # virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
+      # =========================[ Line #2 ]=========================
+      newline
+      os_icon                 # os identifier
+      context                 # user@hostname
+      dir                     # current directory
       # =========================[ Line #3 ]=========================
       newline
       vcs                     # git status
@@ -72,14 +72,14 @@
   # last prompt line gets hidden if it would overlap with left prompt.
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
       # =========================[ Line #1 ]=========================
+      # =========================[ Line #2 ]=========================
+      newline
       # nordvpn                 # nordvpn connection status, linux only (https://nordvpn.com/)
       # ranger                  # ranger shell (https://github.com/ranger/ranger)
       # vpn_ip                  # virtual private network indicator
       # ram                     # free RAM
       # load                    # CPU load
       time                    # current time
-      # =========================[ Line #2 ]=========================
-      newline
       # battery                 # internal battery
       # proxy                   # system-wide http/https/ftp proxy
       # public_ip               # public IP address
