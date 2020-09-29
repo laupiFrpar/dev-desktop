@@ -7,7 +7,36 @@
     st = status
     add-conflicted-files = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; git add `f`"
     edit-conflicted-files = "!f() { git diff --name-status --diff-filter=U | cut -f2 ; }; $EDITOR `f`"
+    push = push -u
+
+[diff]
+    tool = Kaleidoscope
+
+[difftool]
+    prompt = false
+
+[difftool "Kaleidoscope"]
+    cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+[merge]
+    tool = Kaleidoscope
+
+[mergetool]
+    prompt = false
+
+[mergetool "Kaleidoscope"]
+    cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+    trustExitCode = true
+
+[pull]
+    rebase = false
 
 [user]
-    email = laupi.frpar@gmail.com
+    email = lopi@marinlaunay.fr
     name = Pierre-Louis Launay
