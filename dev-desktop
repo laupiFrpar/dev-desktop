@@ -23,7 +23,7 @@ title_echo "Homebrew"
 
 if ! command -v brew >/dev/null; then
   progress_echo "Installing Homebrew"
-  curl -fsS 'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby >> $LOGFILE
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" >> $LOGFILE
   success_echo
 else
   progress_echo "Updating"
