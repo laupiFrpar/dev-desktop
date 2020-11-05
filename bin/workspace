@@ -1,0 +1,268 @@
+#!/bin/bash
+
+if [ $# != 2 ]; then
+    echo "usage:  workspace start <workspace_name>
+        workspace stop <workspace_name>"
+    exit 1
+fi
+
+# https://stackoverflow.com/questions/238073/how-to-add-a-progress-bar-to-a-shell-script/39898465#39898465
+progress-bar() {
+    local duration=${1}
+
+    already_done() {
+        for ((done=0; done<$elapsed; done++)); do
+            printf "▇";
+        done
+    }
+
+    remaining() {
+        for ((remain=$elapsed; remain<$duration; remain++)); do 
+            printf " "; 
+        done
+    }
+
+    percentage() {
+        printf "| %s%%" $(( (($elapsed)*100)/($duration)*100/100 ));
+    }
+
+    clean_line() { 
+        printf "\r"; 
+    }
+
+    for (( elapsed=1; elapsed<=$duration; elapsed++ )); do
+        already_done; remaining; percentage
+        sleep 1
+        clean_line
+    done
+
+    clean_line
+}
+
+# https://stackoverflow.com/questions/12498304/using-bash-to-display-a-progress-indicator
+wait() {
+    local duration=${1}
+
+    spin[0]="-"
+    spin[1]="\\"
+    spin[2]="|"
+    spin[3]="/"
+
+    echo -ne "\nPlease wait ${spin[0]}"
+    for ((elapsed=1; elapsed<=$duration; elapsed++)); do
+        for i in "${spin[@]}"; do
+            echo -ne "\b${i}"
+            sleep 0.25
+        done
+    done
+    echo -ne "\r";
+}
+
+workspace_init () {
+    case $1 in
+        creads)
+            echo -e "\n********************************\nPrepare the workspace for Creads\n********************************\n"
+            echo -e "* Use PHP 7.1.33\n"
+            phpbrew use 7.1.33
+
+            cd ${LOPIDOCK_PATH}
+
+            # Exit if any commands returns non-zero
+            set -e
+
+            echo -e "* Remove Creads's containers if exists\n"
+            docker-compose rm ${CONTAINERS_CREADS_WORKSPACE}
+
+            echo -e "\n* Create containers for Creads\n"
+            docker-compose up -d ${CONTAINERS_CREADS_WORKSPACE}
+
+            # No exit if any commands returns non-zero
+            set +e
+
+            cd ${CREADS_WORKSPACE_PATH}
+
+            echo -e "\n* Bootstrap Creads\n"
+            npx lerna bootstrap
+
+            cd ${APP_CREADS_WORKSPACE_PATH}
+            echo -e "* Install App's vendors\n"
+            composer i
+
+            cd ${API_CREADS_WORKSPACE_PATH}
+            echo -e "* Install Api's vendors\n"
+            composer i
+            ;;
+
+        gift)
+            echo -e "\n**************************************\nPrepare the workspace for Gift project\n**************************************\n"
+
+            cd ${LOPIDOCK_PATH}
+
+            # Exit if any commands returns non-zero
+            set -e
+
+            echo -e "* Remove Gift project's containers if exists\n"
+            docker-compose up -d mysql
+
+            echo -e "\n* Create containers for Gift project\n"
+
+            # No exit if any commands returns non-zero
+            set +e
+
+            cd ${GIFT_LOPI_WORKSPACE_PATH}
+            echo -e "* Install Gift project's vendors\n"
+            composer i
+            ;;
+
+        *)
+            echo "Unknown workspace name $1"
+            exit 1
+            ;;
+    esac
+}
+
+workspace_start () {
+    case $1 in
+        creads)
+            echo -e "\n**********************\nStart Creads workspace\n**********************\n"
+            echo -e "* Use PHP 7.1.33\n"
+            phpbrew use 7.1.33
+
+            cd ${LOPIDOCK_PATH}
+            
+            # Exit if any commands returns non-zero
+            set -e
+
+            echo -e "* Start containers for Creads\n"
+            docker-compose start ${CONTAINERS_CREADS_WORKSPACE}
+
+            wait 60
+
+            # No exit if any commands returns non-zero
+            set +e
+
+            cd ${APP_CREADS_WORKSPACE_PATH}
+
+            echo -e "\n* Start App Resque processes"
+            make resque-start
+
+            echo -e "\n* Start App webserver\n"
+            symfony server:start -d --port=8002
+
+            cd ${API_CREADS_WORKSPACE_PATH}
+
+            echo -e "\n* Start Api Resque processes"
+            make resque-start
+
+            echo -e "\n* Start Api webserver\n"
+            symfony server:start -d --no-tls --port=8000
+
+            echo -e "* Start Api websocket\n"
+            make websocket-server-start
+            ;;
+
+        gift)
+            echo -e "\n****************************\nStart Gift project workspace\n****************************\n"
+            cd ${LOPIDOCK_PATH}
+            
+            # Exit if any commands returns non-zero
+            set -e
+
+            echo -e "* Start containers for Gift project\n"
+            docker-compose start mysql
+
+            cd ${GIFT_LOPI_WORKSPACE_PATH}
+            symfony server:start -d --port=8003
+            ;;
+
+        *)
+            echo "Unknown workspace name $1"
+            ;;
+    esac
+}
+
+workspace_stop () {
+    case $1 in
+        creads)
+
+            echo -e "\n*********************\nStop Creads workspace\n*********************\n"
+            phpbrew use 7.1.33
+
+            cd ${API_CREADS_WORKSPACE_PATH}
+
+            echo -e "* Stop Api websocket\n"
+            ps aux | grep websocket | grep -v grep | awk '{print $2}' | xargs kill -9
+
+            echo -e "* Stop Api Resque processes\n"
+            app/console resque:scheduledworker-stop
+            app/console resque:worker-stop -a
+
+            echo -e "\n* Stop Api webserver\n"
+            symfony server:stop
+
+            cd ${APP_CREADS_WORKSPACE_PATH}
+            echo -e "* Stop Api Resque processes\n"
+            app/console resque:scheduledworker-stop
+            app/console resque:worker-stop -a
+
+            echo -e "\n* Stop App webserver\n"
+            symfony server:stop
+                
+            cd ${LOPIDOCK_PATH}
+
+            echo -e "* Stop containers for Creads\n"
+            docker-compose stop ${CONTAINERS_CREADS_WORKSPACE}
+            ;;
+
+        gift)
+            echo -e "\n****************************\nStop Gift project workspace\n****************************\n"
+            cd ${LOPIDOCK_PATH}
+            
+            # Exit if any commands returns non-zero
+            set -e
+
+            echo -e "* Stop containers for Gift project\n"
+            docker-compose stop mysql
+
+            cd ${GIFT_LOPI_WORKSPACE_PATH}
+            symfony server:stop
+            ;;
+
+        *)
+            echo "Unknown workspace name $1"
+            exit 1
+            ;;
+    esac
+}
+
+source ~/.phpbrew/bashrc
+
+WORKSPACE_PATH=~/workspace
+LOPIDOCK_PATH=${WORKSPACE_PATH}/lopidock
+LOPI_WORKSPACE_PATH=${WORKSPACE_PATH}/lopi
+CREADS_WORKSPACE_PATH=${WORKSPACE_PATH}/creads/source
+APP_CREADS_WORKSPACE_PATH=${CREADS_WORKSPACE_PATH}/app
+API_CREADS_WORKSPACE_PATH=${CREADS_WORKSPACE_PATH}/api
+BUSINESS_CREADS_WORKSPACE_PATH=${CREADS_WORKSPACE_PATH}/business
+CONSOLE_CREADS_WORKSPACE_PATH=${CREADS_WORKSPACE_PATH}/console
+CONTAINERS_CREADS_WORKSPACE="creads-mailcatcher creads-mysql creads-redis creads-elasticsearch-plateforme creads-elasticsearch-partners"
+GIFT_LOPI_WORKSPACE_PATH=${LOPI_WORKSPACE_PATH}/gift
+
+case $1 in
+    start)
+        workspace_start $2
+        ;;
+
+    stop)
+        workspace_stop $2
+        ;;
+
+    init)
+        workspace_init $2
+        ;;
+
+    *)
+        echo "Unknown argument $1"
+        exit 1
+        ;;
+esac

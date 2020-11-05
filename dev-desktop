@@ -15,12 +15,6 @@ source "./functions"
 
 title_echo "General"
 
-if [ ! -d "$HOME/bin" ]; then
-  progress_echo "Create bin directory"
-	mkdir "$HOME/bin"
-  success_echo
-fi
-
 #######################################
 # Brew
 #######################################
@@ -159,6 +153,21 @@ else
 fi
 
 success_echo
+
+#######################################
+# Scripts
+#######################################
+
+if [ ! -d "$HOME/bin" ]; then
+  progress_echo "Create bin directory"
+	mkdir "$HOME/bin"
+  mv -f bin/* "$HOME/bin"
+  success_echo
+else
+  progress_echo "Update bin scripts"
+  mv -f bin/* "$HOME/bin"
+  success_echo
+fi
 
 #######################################
 # Symfony Cli

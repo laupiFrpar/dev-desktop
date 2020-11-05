@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ -z $1 ]; then
+    echo "You must specify the directory to empty"
+    exit
+fi
+
+if [ -z $2 ]; then
+    echo "You must specify the extension's file"
+    exit
+fi
+
+for entry in $1/*.$2; do
+    echo "" > "$entry"
+    echo "Empty $entry...OK"
+done
