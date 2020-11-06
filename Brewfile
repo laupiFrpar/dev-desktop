@@ -1,6 +1,7 @@
 tap 'homebrew/bundle'
 tap 'homebrew/core'
 tap 'homebrew/services'
+tap 'homebrew/cask-fonts'
 
 # System base
 brew 'antigen'
@@ -33,3 +34,6 @@ brew 'zlib'
 
 # Ruby
 brew 'rbenv'
+
+# fonts
+cask 'font-fira-code-nerd-font'
