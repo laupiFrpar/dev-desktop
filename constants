@@ -1,0 +1,4 @@
+#!/usr/sh
+
+LOGFILE=~/.dev-desktop.log
+BREWFILE=./Brewfile

@@ -1,34 +1,70 @@
 #!/bin/sh
 
+#====  FUNCTION  ===============================================================
+# NAME: title_echo
+# DESCRIPTION: Display the message in title format
+# PARAMETER 1: The title to display
+#===============================================================================
 title_echo() {
   local title="$1"; shift
   printf "\n$title\n\n" "$@"
 }
 
+#====  FUNCTION  ===============================================================
+# NAME: progress_echo
+# DESCRIPTION: Display the message in progress format
+# PARAMETER 1: The message to display
+#===============================================================================
 progress_echo() {
     local message="$1"; shift
     printf "$message..." "$@"
 }
 
+#====  FUNCTION  ===============================================================
+# NAME: success_echo
+# DESCRIPTION: Display the success message
+# PARAMETER 1: The message to display
+#===============================================================================
 success_echo() {
     local message="$1"; shift
     printf "OK $message\n"
 }
 
+#====  FUNCTION  ===============================================================
+# NAME: fail_echo
+# DESCRIPTION: Display the fail message
+# PARAMETER 1: The message to display
+#===============================================================================
 fail_echo() {
     local message="$1"; shift
     printf "Failed $message\n"
 }
 
+#====  FUNCTION  ===============================================================
+# NAME: message_echo
+# DESCRIPTION: Display the message
+# PARAMETER 1: The message to display
+#===============================================================================
 message_echo() {
     local message="$1"; shift
     printf "$message\n" "$@"
 }
 
+#====  FUNCTION  ===============================================================
+# NAME: brew_formula_check
+# DESCRIPTION: Check if a formula brew is installed
+# PARAMETER 1: The formula brew name
+#===============================================================================
 brew_formula_check() {
   brew list -1 | grep -Fqx "$1"
 }
 
+#====  FUNCTION  ===============================================================
+# NAME: append_to_file <file_name> <text>
+# DESCRIPTION: Append a text in a file
+# PARAMETER 1: The file name
+# PARAMETER 2: The text to append
+#===============================================================================
 append_to_file() {
   local file="$1"
   local text="$2"

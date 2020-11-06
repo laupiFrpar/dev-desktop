@@ -1,39 +1,57 @@
 #!/bin/sh
+#===================================================================================
+#
+# FILE:  dev-desktop
+#
+# USAGE:  dev-desktop
+#
+# DESCRIPTION:  Install or update dev tools
+#
+# OPTIONS:  ---
+# REQUIREMENTS:  ---
+# BUGS:  ---
+# NOTES:  ---
+# AUTHOR:  Pierre-Louis Launay <lopi@marinlaunay.fr>
+# COMPANY:  ---
+# CREATED:  25/11/2019
+# REVISION:  06/11/2020
+#===================================================================================
 
-LOGFILE=~/.dev-desktop.log
-BREWFILE=./Brewfile
+source "./constants"
+source "./functions"
+
 errorMessages=""
 error=false
 
 if [ -e "$LOGFILE" ]; then
-    rm "$LOGFILE"
+    rm "$LOGFILE" # Delete the existing log file
 fi
 
-touch $LOGFILE
+touch "$LOGFILE" # Create the log file
 
-source "./functions"
+title_echo "#----------------------------------------------------------------------
+# General
+#----------------------------------------------------------------------"
 
-title_echo "General"
-
-#######################################
+#----------------------------------------------------------------------
 # Brew
-#######################################
+#----------------------------------------------------------------------
 
-title_echo "Homebrew"
+title_echo "# Homebrew"
 
 if ! command -v brew >/dev/null; then
   progress_echo "Installing Homebrew"
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" >> $LOGFILE
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" >> "$LOGFILE"
   success_echo
 else
   progress_echo "Updating"
-  brew update >> $LOGFILE 2>&1
+  brew update >> "$LOGFILE" 2>&1
   success_echo
 fi
 
 if [ -x /usr/local/bin/brew ]; then
     progress_echo "Check installation"
-    if brew doctor >> $LOGFILE 2>&1; then
+    if brew doctor >> "$LOGFILE" 2>&1; then
       success_echo "Your Homebrew installation is good to go"
     else
       fail_echo
@@ -44,30 +62,30 @@ if [ -x /usr/local/bin/brew ]; then
     if [ -e "$BREWFILE" ]; then
         progress_echo "Install formulas and casks"
 
-        if brew bundle --file="$BREWFILE" >> $LOGFILE; then
+        if brew bundle --file="$BREWFILE" >> "$LOGFILE"; then
           success_echo
         else
           error=true
           fail_echo
-          errorMessages="${errorMessages}Some formulas or casks failed to install"
-          errorMessages="${errorMessages}\n\tThis is usually due to one of the Mac apps being already installed,"
-          errorMessages="${errorMessages}\n\tin which case, you can ignore these errors."
+          errorMessages="$errorMessages Some formulas or casks failed to install"
+          errorMessages="$errorMessages\n\tThis is usually due to one of the Mac apps being already installed,"
+          errorMessages="$errorMessages\n\tin which case, you can ignore these errors."
         fi
     fi
 fi
 
-title_echo "Shell"
+title_echo "# Shell"
 
-#######################################
+#----------------------------------------------------------------------
 # Git
-#######################################
+#----------------------------------------------------------------------
 progress_echo "Configure Git"
 mv -f dotfiles/gitconfig ~/.gitconfig
 success_echo
 
-#######################################
+#----------------------------------------------------------------------
 # SSH
-#######################################
+#----------------------------------------------------------------------
 
 if [ ! -f "$HOME/.ssh/id_rsa" ]; then
   progress_echo "Configure SSH"
@@ -77,9 +95,9 @@ if [ ! -f "$HOME/.ssh/id_rsa" ]; then
   success_echo
 fi
 
-#######################################
+#----------------------------------------------------------------------
 # Zsh
-#######################################
+#----------------------------------------------------------------------
 
 progress_echo "Check zsh is the default shell"
 if [ $SHELL != "/bin/zsh" ]; then
@@ -105,20 +123,20 @@ fi
 mv -f dotfiles/p10k.zsh ~/.p10k.zsh
 success_echo
 
-title_echo "Development"
+title_echo "# Development"
 
-#######################################
+#----------------------------------------------------------------------
 # Composer
-#######################################
+#----------------------------------------------------------------------
 
 if [ ! -e /usr/local/bin/composer ]; then
   progress_echo "Install composer"
   EXPECTED_SIGNATURE="$(wget -q -O - https://composer.github.io/installer.sig)"
-  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" >> $LOGFILE
+  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" >> "$LOGFILE"
   ACTUAL_SIGNATURE="$(php -r "echo hash_file('SHA384', 'composer-setup.php');")"
 
   if [ "$EXPECTED_SIGNATURE" == "$ACTUAL_SIGNATURE" ]; then
-    php composer-setup.php --quiet >> $LOGFILE
+    php composer-setup.php --quiet >> "$LOGFILE"
     mv composer.phar /usr/local/bin/composer
     success_echo
   else
@@ -130,33 +148,34 @@ if [ ! -e /usr/local/bin/composer ]; then
   rm composer-setup.php
 else
   progress_echo "Update composer"
-  composer selfupdate >> $LOGFILE 2>&1
+  composer selfupdate >> "$LOGFILE" 2>&1
   success_echo
 fi
 
-#######################################
+#----------------------------------------------------------------------
 # PHP
-#######################################
+#----------------------------------------------------------------------
 
-message_echo "Check PHP version $(php -v | egrep 'PHP (\d{1,}\.?){2,3}' | awk '{ print $2 }')"
+version_php=$(php -v | egrep 'PHP (\d{1,}\.?){2,3}' | awk '{ print $2 }')
+message_echo "Check PHP version $version_php"
 
 if [ -f /usr/local/bin/phpbrew ]; then
   progress_echo "Updating phpbrew tool ..."
-  phpbrew self-update >> $LOGFILE 2>&1
+  phpbrew self-update >> "$LOGFILE" 2>&1
 else
   progress_echo "Installing PHPBrew tool ..."
-  curl -sS -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew >> $LOGFILE 2>&1
+  curl -sS -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew >> "$LOGFILE" 2>&1
   chmod +x phpbrew
   sudo mv phpbrew /usr/local/bin/phpbrew
   cd $HOME
-  phpbrew init >> $LOGFILE 2>&1
+  phpbrew init >> "$LOGFILE" 2>&1
 fi
 
 success_echo
 
-#######################################
+#----------------------------------------------------------------------
 # Scripts
-#######################################
+#----------------------------------------------------------------------
 
 if [ ! -d "$HOME/bin" ]; then
   progress_echo "Create bin directory"
@@ -169,28 +188,33 @@ else
   success_echo
 fi
 
-#######################################
+#----------------------------------------------------------------------
 # Symfony Cli
-#######################################
+#----------------------------------------------------------------------
 
 if [ ! -f /usr/local/bin/symfony ]; then
   progress_echo "Installing Symfony client ..."
-  curl -sS https://get.symfony.com/cli/ | bash >> $LOGFILE 2>&1
-  mv /Users/pllaunay/.symfony/bin/symfony /usr/local/bin/symfony
-  success_echo
+  curl -sS https://get.symfony.com/cli/installer | bash >> "$LOGFILE" 2>&1
+
+  if [ -f "$HOME/.symfony/bin/symfony" ]; then
+    mv ${HOME}/.symfony/bin/symfony /usr/local/bin/symfony
+    success_echo
+  else
+    fail_echo "Symfony Cli is not installed"
+  fi
 fi
 
-#######################################
+#----------------------------------------------------------------------
 # vim
-#######################################
+#----------------------------------------------------------------------
 
 progress_echo "Configure vim"
 mv -f dotfiles/vimrc ~/.vimrc
 success_echo
 
-#######################################
+#----------------------------------------------------------------------
 # Yarn
-#######################################
+#----------------------------------------------------------------------
 
 if [ -d ~/.yarn ]; then
   progress_echo "Update Yarn"
@@ -198,10 +222,10 @@ else
   progress_echo "Install Yarn"
 fi
 
-curl -sS -L https://yarnpkg.com/install.sh | bash >> $LOGFILE 2>&1
+curl -sS -L https://yarnpkg.com/install.sh | bash >> "$LOGFILE" 2>&1
 success_echo
 
 if [ ${error} = true ]; then
   message_echo "\nErrors:"
-  echo -e "${errorMessages}"
+  echo -e "$errorMessages"
 fi
