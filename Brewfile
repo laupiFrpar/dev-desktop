@@ -35,5 +35,8 @@ brew 'zlib'
 # Ruby
 brew 'rbenv'
 
+# Go Lang
+brew 'golang'
+
 # fonts
 cask 'font-fira-code-nerd-font'
