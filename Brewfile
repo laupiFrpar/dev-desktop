@@ -32,11 +32,10 @@ brew 'libyaml'
 brew 'libzip'
 brew 'zlib'
 
-# Ruby
+# Programming language
 brew 'rbenv'
-
-# Go Lang
 brew 'golang'
+brew 'python'
 
 # fonts
 cask 'font-fira-code-nerd-font'
