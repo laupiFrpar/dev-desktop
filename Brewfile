@@ -23,7 +23,7 @@ brew 'mcrypt'
 brew 'openssl'
 brew 're2c'
 
-#
+# Package for Creads
 brew 'bzip2'
 brew 'gd'
 brew 'imagemagick'
@@ -35,7 +35,7 @@ brew 'zlib'
 # Programming language
 brew 'rbenv'
 brew 'golang'
-brew 'python'
+brew 'pyenv'
 
 # fonts
 cask 'font-fira-code-nerd-font'
