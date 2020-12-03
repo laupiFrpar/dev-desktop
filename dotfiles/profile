@@ -14,6 +14,7 @@ export NVM_DIR="$HOME/.nvm"
 
 export PATH="$brew_path/bin:$brew_path/sbin:$PATH"    # Homebrew bin path
 export PATH="/usr/local/opt/libiconv/bin:$PATH"       # libiconv path
+export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH" # SublimeText path
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH" # Yarn path
 export PATH="$HOME/.composer/vendor/bin:$PATH"        # Composer path
 export PATH="$HOME/bin:$PATH"                         # Custom bin path
