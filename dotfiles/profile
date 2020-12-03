@@ -12,11 +12,12 @@ brew_path=$(brew --prefix)
 export NVM_AUTO_USE=true
 export NVM_DIR="$HOME/.nvm"
 
-export PATH="$brew_path/bin:$brew_path/sbin:$PATH" # Homebrew bin path
-export PATH="/usr/local/opt/libiconv/bin:$PATH" # libiconv path
+export PATH="$brew_path/bin:$brew_path/sbin:$PATH"    # Homebrew bin path
+export PATH="/usr/local/opt/libiconv/bin:$PATH"       # libiconv path
+export PATH="/usr/local/opt/python/libexec/bin:$PATH" # python path
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH" # Yarn path
-export PATH="$HOME/.composer/vendor/bin:$PATH" # Composer path
-export PATH="$HOME/bin:$PATH" # Custom bin path
+export PATH="$HOME/.composer/vendor/bin:$PATH"        # Composer path
+export PATH="$HOME/bin:$PATH"                         # Custom bin path
 
 export PHPBREW_RC_ENABLE=1 # Enable to switch php versions automatically
 
