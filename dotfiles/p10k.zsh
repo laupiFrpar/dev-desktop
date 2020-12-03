@@ -39,20 +39,15 @@
       # azure                   # azure account name (https://docs.microsoft.com/en-us/cli/azure)
       docker                  # Docker version
       # dotnet_version          # .NET version (https://dotnet.microsoft.com)
-      # go_version              # go version (https://golang.org)
+      go_version              # go version (https://golang.org)
       # kubecontext             # current kubernetes context (https://kubernetes.io/)
-      # nodenv                  # node.js version from nodenv (https://github.com/nodenv/nodenv)
-      # nodeenv                 # node.js environment (https://github.com/ekalinin/nodeenv)
       node_version            # node.js version
-      # nvm                     # node.js version from nvm (https://github.com/nvm-sh/nvm)
       php                     # PHP version
-      # pyenv                   # python environment (https://github.com/pyenv/pyenv)
+      pyenv                   # python environment (https://github.com/pyenv/pyenv)
       rbenv                   # ruby version from rbenv (https://github.com/rbenv/rbenv)
       # rust_version            # rustc version (https://www.rust-lang.org)
-      # rvm                     # ruby version from rvm (https://rvm.io)
       symfony                 # Symfony version
       # terraform               # terraform workspace (https://www.terraform.io)
-      # virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
       # =========================[ Line #2 ]=========================
       newline
       os_icon                 # os identifier
