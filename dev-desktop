@@ -221,6 +221,12 @@ fi
 # vim
 #----------------------------------------------------------------------
 
+if [ ! -f "$HOME/.vim/bundle/Vundle.vim" ]; then
+  progress_echo "Install Vundle"
+  git clone https://github.com/VundleVim/Vundle.vim.git "$HOME/.vim/bundle/Vundle.vim"
+  success_echo
+fi
+
 progress_echo "Configure vim"
 mv -f dotfiles/vimrc ~/.vimrc
 success_echo
