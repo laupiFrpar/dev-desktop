@@ -17,8 +17,8 @@ progress-bar() {
     }
 
     remaining() {
-        for ((remain=$elapsed; remain<$duration; remain++)); do 
-            printf " "; 
+        for ((remain=$elapsed; remain<$duration; remain++)); do
+            printf " ";
         done
     }
 
@@ -26,8 +26,8 @@ progress-bar() {
         printf "| %s%%" $(( (($elapsed)*100)/($duration)*100/100 ));
     }
 
-    clean_line() { 
-        printf "\r"; 
+    clean_line() {
+        printf "\r";
     }
 
     for (( elapsed=1; elapsed<=$duration; elapsed++ )); do
@@ -124,16 +124,21 @@ workspace_init () {
 workspace_start () {
     case $1 in
         creads)
-            echo -e "\n**********************\nStart Creads workspace\n**********************\n"
+            echo -e "\n"
+            echo -e "********************************************************************************"
+            echo -e "*                       Start Creads workspace                                 *"
+            echo -e "********************************************************************************\n"
             echo -e "* Use PHP 7.1.33\n"
             phpbrew use 7.1.33
 
             cd ${LOPIDOCK_PATH}
-            
+
             # Exit if any commands returns non-zero
             set -e
 
-            echo -e "* Start containers for Creads\n"
+            echo -e "Docker"
+            echo -e "******\n"
+            echo -e "* Start containers\n"
             docker-compose start ${CONTAINERS_CREADS_WORKSPACE}
 
             wait 60
@@ -143,28 +148,36 @@ workspace_start () {
 
             cd ${APP_CREADS_WORKSPACE_PATH}
 
-            echo -e "\n* Start App Resque processes"
+            echo -e "App (Platform)"
+            echo -e "**************\n"
+            echo -e "* Start Resque processes"
             make resque-start
 
-            echo -e "\n* Start App webserver\n"
+            echo -e "\n"
+            echo -e "* Start webserver\n"
             symfony server:start -d --port=8002
 
             cd ${API_CREADS_WORKSPACE_PATH}
 
-            echo -e "\n* Start Api Resque processes"
+            echo -e "\n"
+            echo -e "Partners API"
+            echo -e "************\n"
+            echo -e "* Start Resque processes"
             make resque-start
 
-            echo -e "\n* Start Api webserver\n"
+            echo -e "\n"
+            echo -e "* Start webserver\n"
             symfony server:start -d --no-tls --port=8000
 
-            echo -e "* Start Api websocket\n"
+            echo -e "\n"
+            echo -e "* Start websocket server\n"
             make websocket-server-start
             ;;
 
         gift)
             echo -e "\n****************************\nStart Gift project workspace\n****************************\n"
             cd ${LOPIDOCK_PATH}
-            
+
             # Exit if any commands returns non-zero
             set -e
 
@@ -184,40 +197,51 @@ workspace_start () {
 workspace_stop () {
     case $1 in
         creads)
-
-            echo -e "\n*********************\nStop Creads workspace\n*********************\n"
+            echo -e "\n"
+            echo -e "********************************************************************************"
+            echo -e "*                     Stop Creads workspace                                    *"
+            echo -e "********************************************************************************\n"
+            echo -e "* Use PHP 7.1.33\n"
             phpbrew use 7.1.33
 
             cd ${API_CREADS_WORKSPACE_PATH}
 
-            echo -e "* Stop Api websocket\n"
+            echo -e "Partners API"
+            echo -e "************\n"
+            echo -e "* Stop websocket server\n"
             ps aux | grep websocket | grep -v grep | awk '{print $2}' | xargs kill -9
 
-            echo -e "* Stop Api Resque processes\n"
+            echo -e "* Stop Resque processes\n"
             app/console resque:scheduledworker-stop
             app/console resque:worker-stop -a
 
-            echo -e "\n* Stop Api webserver\n"
+            echo -e "\n"
+            echo -e "* Stop webserver\n"
             symfony server:stop
 
             cd ${APP_CREADS_WORKSPACE_PATH}
-            echo -e "* Stop Api Resque processes\n"
+            echo -e "App (Platform)"
+            echo -e "**************\n"
+            echo -e "* Stop Resque processes\n"
             app/console resque:scheduledworker-stop
             app/console resque:worker-stop -a
 
-            echo -e "\n* Stop App webserver\n"
+            echo -e "\n"
+            echo -e "* Stop webserver\n"
             symfony server:stop
-                
+
             cd ${LOPIDOCK_PATH}
 
-            echo -e "* Stop containers for Creads\n"
+            echo -e "Docker"
+            echo -e "******\n"
+            echo -e "* Stop containers for Creads workspace\n"
             docker-compose stop ${CONTAINERS_CREADS_WORKSPACE}
             ;;
 
         gift)
             echo -e "\n****************************\nStop Gift project workspace\n****************************\n"
             cd ${LOPIDOCK_PATH}
-            
+
             # Exit if any commands returns non-zero
             set -e
 
