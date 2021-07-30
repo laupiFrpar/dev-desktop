@@ -223,8 +223,8 @@ workspace_stop () {
             echo -e "App (Platform)"
             echo -e "**************\n"
             echo -e "* Stop Resque processes\n"
-            app/console resque:scheduledworker-stop
-            app/console resque:worker-stop -a
+            bin/console resque:scheduledworker-stop
+            bin/console resque:worker-stop -a
 
             echo -e "\n"
             echo -e "* Stop webserver\n"
@@ -269,7 +269,7 @@ APP_CREADS_WORKSPACE_PATH=${CREADS_WORKSPACE_PATH}/app
 API_CREADS_WORKSPACE_PATH=${CREADS_WORKSPACE_PATH}/api
 BUSINESS_CREADS_WORKSPACE_PATH=${CREADS_WORKSPACE_PATH}/business
 CONSOLE_CREADS_WORKSPACE_PATH=${CREADS_WORKSPACE_PATH}/console
-CONTAINERS_CREADS_WORKSPACE="creads-mailcatcher creads-mysql creads-redis creads-elasticsearch-plateforme creads-elasticsearch-partners"
+CONTAINERS_CREADS_WORKSPACE="creads-mailcatcher creads-mysql creads-redis creads-elasticsearch-partners"
 GIFT_LOPI_WORKSPACE_PATH=${LOPI_WORKSPACE_PATH}/gift
 
 case $1 in
