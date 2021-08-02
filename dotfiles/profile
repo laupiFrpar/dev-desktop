@@ -28,35 +28,6 @@ export PHP_INI_SCAN_DIR=":$HOME/workspace/config/php"
 export THEME="xterm-256color"
 
 # =============================================================================
-#                                   Plugins
-# =============================================================================
-
-# Load Antigen - ZSH Plugins manager
-source /usr/local/share/antigen/antigen.zsh
-
-## Configure ZSH
-antigen use oh-my-zsh
-
-## Install zsh plugins
-
-antigen bundle brew
-antigen bundle caniuse
-antigen bundle caarlos0/open-pr
-antigen bundle colored-man-pages
-antigen bundle docker
-antigen bundle docker-compose
-antigen bundle git
-antigen bundle lukechilds/zsh-nvm
-antigen bundle voronkovich/symfony.plugin.zsh
-antigen bundle z
-antigen bundle zdharma/fast-syntax-highlighting
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-completions
-
-## Install ZSH theme
-antigen theme romkatv/powerlevel10k
-
-# =============================================================================
 #                                   Options
 # =============================================================================
 
@@ -66,10 +37,12 @@ HISTSIZE=3000           # Nombre de lignes en mémoire
 HISTFILE=~/.zsh_history # Fichier de sauvegarde
 SAVEHIST=3000           # Nombre d'entrées à enregistrer
 HISTDUP=erase           # Suppression des doublons
+
 setopt appendhistory    # Ajoute des entrées en append
-setopt sharehistory     # Partage de l'historique entre terminaux
-setopt incappendhistory # Ajout immédiat à l'historique (pas à la fermeture du terminal)
 setopt correct          # Proposition de correction sur des frappes erronées
+setopt incappendhistory # Ajout immédiat à l'historique (pas à la fermeture du terminal)
+setpot promptsubst      #
+setopt sharehistory     # Partage de l'historique entre terminaux
 
 # =============================================================================
 #                                   Aliases
@@ -83,6 +56,33 @@ alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/d
 # =============================================================================
 
 # =============================================================================
+#                                   Plugins
+# =============================================================================
+
+## Install zsh plugins
+
+# antigen bundle brew
+# antigen bundle caniuse
+# antigen bundle caarlos0/open-pr
+# antigen bundle voronkovich/symfony.plugin.zsh
+
+zinit wait lucid for \
+    OMZP::colored-man-pages \
+    as"completion" OMZP::docker/_docker \
+    as"completion" OMZP::docker-compose/_docker-compose \
+    OMZL::git.zsh \
+    atload"unalias grv" OMZP::git \
+    lukechilds/zsh-nvm \
+    OMZP::z \
+    atinit"zicompinit; zicdreplay" zdharma/fast-syntax-highlighting \
+    zsh-users/zsh-autosuggestions \
+    atload"zicompinit; zicdreplay" blockf zsh-users/zsh-completions
+
+## Install ZSH theme
+zinit ice depth=1
+zinit light romkatv/powerlevel10k
+
+# =============================================================================
 #                                   Configuration
 # =============================================================================
 
@@ -91,9 +91,6 @@ source ~/.p10k.zsh
 # =============================================================================
 #                                   Startup
 # =============================================================================
-
-## Apply the ZSH configuration
-antigen apply
 
 ## Load the iterm2 integration
 if [ -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
