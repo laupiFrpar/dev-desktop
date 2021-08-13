@@ -7,15 +7,31 @@
 #
 # DESCRIPTION:  Install or update dev tools
 #
-# OPTIONS:  ---
+# OPTIONS:
+#   --update-brew   Update brew formulas
 # REQUIREMENTS:  ---
 # BUGS:  ---
 # NOTES:  ---
 # AUTHOR:  Pierre-Louis Launay <lopi@marinlaunay.fr>
 # COMPANY:  ---
 # CREATED:  25/11/2019
-# REVISION: 06/11/2020
+# REVISION: 13/08/2021
 #===================================================================================
+
+UPDATE_BREW=false
+
+# Process option
+while [ ! -z "$1" ]; do
+  case "$1" in
+    --update-brew)
+      shift
+      UPDATE_BREW=true
+      ;;
+    *)
+      ;;
+  esac
+shift
+done
 
 source "./constants"
 source "./functions"
@@ -43,12 +59,15 @@ if ! command -v brew >/dev/null; then
   progress_echo "Installing Homebrew"
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" >> "$LOGFILE"
   success_echo
-else
+elif $UPDATE_BREW; then
   progress_echo "Updating"
-  brew update >> "$LOGFILE" 2>&1
-  success_echo
+  # brew update >> "$LOGFILE" 2>&1
+  # success_echo
+else
+  message_echo "Brew will not update"
 fi
 
+exit
 if [ -x /usr/local/bin/brew ]; then
     progress_echo "Check installation"
     if brew doctor >> "$LOGFILE" 2>&1; then
