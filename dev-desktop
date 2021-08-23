@@ -157,8 +157,12 @@ if [[ ! -f "$HOME/.zinit/bin/zinit.zsh" ]]; then
     fail_echo "The clone has failed"
 
   source "$HOME/.zinit/bin/zinit.zsh"
+  autoload -Uz _zinit
+  (( ${+_comps} )) && _comps[zinit]=_zinit
 else
   source "$HOME/.zinit/bin/zinit.zsh"
+  autoload -Uz _zinit
+  (( ${+_comps} )) && _comps[zinit]=_zinit
   progress_echo "Update Zinit"
   zinit self-update >> $LOGFILE
   success_echo
