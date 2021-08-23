@@ -41,7 +41,7 @@ HISTDUP=erase           # Suppression des doublons
 setopt appendhistory    # Ajoute des entrées en append
 setopt correct          # Proposition de correction sur des frappes erronées
 setopt incappendhistory # Ajout immédiat à l'historique (pas à la fermeture du terminal)
-setpot promptsubst      #
+setopt promptsubst      #
 setopt sharehistory     # Partage de l'historique entre terminaux
 
 # =============================================================================
