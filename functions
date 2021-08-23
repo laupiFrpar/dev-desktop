@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 #====  FUNCTION  ===============================================================
 # NAME: title_echo
@@ -16,7 +16,10 @@ title_echo() {
 # PARAMETER 1: The message to display
 #===============================================================================
 progress_echo() {
-    local message="$1"; shift
+    local message="$1";
+    if [[ $# > 0 ]]; then
+      shift
+    fi
     printf "$message..." "$@"
 }
 
@@ -26,7 +29,10 @@ progress_echo() {
 # PARAMETER 1: The message to display
 #===============================================================================
 success_echo() {
-    local message="$1"; shift
+    local message="$1"
+    if [[ $# > 0 ]]; then
+      shift
+    fi
     printf "OK $message\n"
 }
 
@@ -36,7 +42,10 @@ success_echo() {
 # PARAMETER 1: The message to display
 #===============================================================================
 fail_echo() {
-    local message="$1"; shift
+    local message="$1"
+    if [[ $# > 0 ]]; then
+      shift
+    fi
     printf "Failed $message\n"
 }
 
@@ -46,7 +55,10 @@ fail_echo() {
 # PARAMETER 1: The message to display
 #===============================================================================
 message_echo() {
-    local message="$1"; shift
+    local message="$1";
+    if [[ $# > 0 ]]; then
+      shift
+    fi
     printf "$message\n" "$@"
 }
 

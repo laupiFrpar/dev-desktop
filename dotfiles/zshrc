@@ -1,4 +1,12 @@
 #!/usr/bin/zsh
+
+## Load Zinit
+if [ -e "$HOME/.zinit/bin/zinit.zsh" ]; then
+    source "$HOME/.zinit/bin/zinit.zsh"
+    autoload -Uz _zinit
+    (( ${+_comps} )) && _comps[zinit]=_zinit
+fi
+
 ## Load the profile
 if [ -e "$HOME/.profile" ]; then
     source "$HOME/.profile"

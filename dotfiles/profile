@@ -1,4 +1,5 @@
 #!/usr/bin/zsh
+
 # =============================================================================
 #                                   Functions
 # =============================================================================
@@ -61,22 +62,26 @@ alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/d
 
 ## Install zsh plugins
 
-# antigen bundle brew
-# antigen bundle caniuse
-# antigen bundle caarlos0/open-pr
+### Old used plugins, need it anymore ?
+# OMZP::brew
+# https://github.com/walesmd/caniuse.plugin.zsh
+# https://github.com/caarlos0-graveyard/zsh-open-pr
 # antigen bundle voronkovich/symfony.plugin.zsh
 
-zinit wait lucid for \
+zinit wait lucid light-mode for \
+    OMZL::git.zsh \
     OMZP::colored-man-pages \
     as"completion" OMZP::docker/_docker \
     as"completion" OMZP::docker-compose/_docker-compose \
-    OMZL::git.zsh \
     atload"unalias grv" OMZP::git \
     lukechilds/zsh-nvm \
-    OMZP::z \
-    atinit"zicompinit; zicdreplay" zdharma/fast-syntax-highlighting \
-    zsh-users/zsh-autosuggestions \
-    atload"zicompinit; zicdreplay" blockf zsh-users/zsh-completions
+    zsh-users/zsh-autosuggestions
+    # OMZP::z \
+
+### Another plugins need to compinit and cdreplay
+zinit wait lucid light-mode atinit"zicompinit; zicdreplay" for \
+    zdharma/fast-syntax-highlighting \
+    zsh-users/zsh-completions
 
 ## Install ZSH theme
 zinit ice depth=1

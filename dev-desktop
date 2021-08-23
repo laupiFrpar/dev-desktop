@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 #===================================================================================
 #
 # FILE:  dev-desktop
@@ -61,13 +61,12 @@ if ! command -v brew >/dev/null; then
   success_echo
 elif $UPDATE_BREW; then
   progress_echo "Updating"
-  # brew update >> "$LOGFILE" 2>&1
-  # success_echo
+  brew update >> "$LOGFILE" 2>&1
+  success_echo
 else
-  message_echo "Brew will not update"
+  message_echo "Brew will not be updated"
 fi
 
-exit
 if [ -x /usr/local/bin/brew ]; then
     progress_echo "Check installation"
     if brew doctor >> "$LOGFILE" 2>&1; then
@@ -78,7 +77,7 @@ if [ -x /usr/local/bin/brew ]; then
       errorMessages='\nYour Homebrew installation reported some errors or warnings, please review the Homebrew messages to see if any action is needed.'
     fi
 
-    if [ -e "$BREWFILE" ]; then
+    if $UPDATE_BREW && [ -e "$BREWFILE" ]; then
         progress_echo "Install formulas and casks"
 
         if brew bundle --file="$BREWFILE" >> "$LOGFILE"; then
@@ -140,33 +139,34 @@ fi
 if [ -d "$HOME/.antigen" ]; then
   progress_echo "Uninstall Antigen"
   rm -rf "$HOME/.antigen"
-  if [ $(brew_formula_check antigen) ]; then
+  if [[ $(brew_formula_check antigen) ]]; then
     brew uninstall -f antigen
   fi
   success_echo
 fi
 
 if [[ ! -f "$HOME/.zinit/bin/zinit.zsh" ]]; then
-  print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
+  progress_echo "Installig DHARMA Initiative Plugin Manager (zdharma/zinit)..."
+
   if [[ ! -d "$HOME/.zinit" ]]; then
     mkdir -p "$HOME/.zinit" && chmod g-rwX "$HOME/.zinit"
   fi
 
-  git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
-    print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
-    print -P "%F{160}▓▒░ The clone has failed.%f%b"
+  git clone -q https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
+    success_echo || \
+    fail_echo "The clone has failed"
+
+  source "$HOME/.zinit/bin/zinit.zsh"
 else
+  source "$HOME/.zinit/bin/zinit.zsh"
   progress_echo "Update Zinit"
-  zinit self-update
+  zinit self-update >> $LOGFILE
   success_echo
 fi
 
 progress_echo "Configure ZSH"
 
-if [ ! -f ~/.zshrc ]; then
-  mv dotfiles/zshrc ~/.zshrc
-fi
-
+mv -f dotfiles/zshrc ~/.zshrc
 mv -f dotfiles/profile ~/.profile
 
 if [ -d ~/.p10krc ]; then
@@ -232,8 +232,6 @@ success_echo
 #----------------------------------------------------------------------
 # Python
 #----------------------------------------------------------------------
-
-
 
 #----------------------------------------------------------------------
 # Scripts
