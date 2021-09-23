@@ -130,9 +130,9 @@ else
   success_echo
 fi
 
-if [ -d "$ZSH" ]; then
-  progress_echo "Uninstall Oh My ZSH"
-  uninstall_oh_my_zsh
+if [ ! -d "$ZSH" ]; then
+  progress_echo "Install Oh My ZSH"
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
   success_echo
 fi
 
