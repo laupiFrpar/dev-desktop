@@ -1,5 +1,10 @@
 #!/usr/bin/zsh
 
+## Load Oh My ZSH configuration
+if [ -e "$HOME/.oh-my-zsh" ]; then
+    source "$HOME/.oh-my-zsh"
+fi
+
 ## Load Zinit
 if [ -e "$HOME/.zinit/bin/zinit.zsh" ]; then
     source "$HOME/.zinit/bin/zinit.zsh"
