@@ -170,7 +170,7 @@ fi
 
 progress_echo "Configure ZSH"
 
-mv -f dotfiles/oh-my-zsh ~/.oh-my-zsh
+mv -f dotfiles/ohmyzshrc ~/.ohmyzshrc
 mv -f dotfiles/zshrc ~/.zshrc
 mv -f dotfiles/profile ~/.profile
 
