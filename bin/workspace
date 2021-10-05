@@ -151,7 +151,8 @@ workspace_start () {
             echo -e "App (Platform)"
             echo -e "**************\n"
             echo -e "* Start Resque processes"
-            make resque-start
+            bin/console resque:worker-start "*"
+            bin/console resque:scheduledworker-start
 
             echo -e "\n"
             echo -e "* Start webserver\n"
@@ -163,7 +164,9 @@ workspace_start () {
             echo -e "Partners API"
             echo -e "************\n"
             echo -e "* Start Resque processes"
-            make resque-start
+            app/console resque:worker-start invoicing,sageone,credit,payment,webhook,hubspot,export_coupon,export_projects,spreadsheet,default,robot,project_proposal_reminder
+	        app/console resque:worker-start image
+	        app/console resque:scheduledworker-start
 
             echo -e "\n"
             echo -e "* Start webserver\n"
@@ -172,7 +175,7 @@ workspace_start () {
 
             echo -e "\n"
             echo -e "* Start websocket server\n"
-            make websocket-server-start
+            app/console websocket-server:start &
             ;;
 
         gift)
