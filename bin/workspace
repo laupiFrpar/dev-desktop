@@ -151,8 +151,8 @@ workspace_start () {
             echo -e "App (Platform)"
             echo -e "**************\n"
             echo -e "* Start Resque processes"
-            bin/console resque:worker-start "*"
-            bin/console resque:scheduledworker-start
+            symfony console resque:worker-start "*"
+            symfony console resque:scheduledworker-start
 
             echo -e "\n"
             echo -e "* Start webserver\n"
@@ -164,18 +164,18 @@ workspace_start () {
             echo -e "Partners API"
             echo -e "************\n"
             echo -e "* Start Resque processes"
-            app/console resque:worker-start invoicing,sageone,credit,payment,webhook,hubspot,export_coupon,export_projects,spreadsheet,default,robot,project_proposal_reminder
-	        app/console resque:worker-start image
-	        app/console resque:scheduledworker-start
+            symfony console resque:worker-start invoicing,sageone,credit,payment,webhook,hubspot,export_coupon,export_projects,spreadsheet,default,robot,project_proposal_reminder
+	        symfony console resque:worker-start image
+	        symfony console resque:scheduledworker-start
 
             echo -e "\n"
             echo -e "* Start webserver\n"
-            # symfony server:start -d --no-tls --port=8000
-            app/console server:start -p8000
+            symfony server:start -d --no-tls --port=8000
+            # symfony console server:start -p8000
 
             echo -e "\n"
             echo -e "* Start websocket server\n"
-            app/console websocket-server:start &
+            symfony console websocket-server:start &
             ;;
 
         gift)
@@ -216,20 +216,20 @@ workspace_stop () {
             ps aux | grep websocket | grep -v grep | awk '{print $2}' | xargs kill -9
 
             echo -e "* Stop Resque processes\n"
-            app/console resque:scheduledworker-stop
-            app/console resque:worker-stop -a
+            symfony console resque:scheduledworker-stop
+            symfony console resque:worker-stop -a
 
             echo -e "\n"
             echo -e "* Stop webserver\n"
-            # symfony server:stop
-            app/console server:stop
+            symfony server:stop
+            # symfony console server:stop
 
             cd ${APP_CREADS_WORKSPACE_PATH}
             echo -e "App (Platform)"
             echo -e "**************\n"
             echo -e "* Stop Resque processes\n"
-            bin/console resque:scheduledworker-stop
-            bin/console resque:worker-stop -a
+            symfony console resque:scheduledworker-stop
+            symfony console resque:worker-stop -a
 
             echo -e "\n"
             echo -e "* Stop webserver\n"
