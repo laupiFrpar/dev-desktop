@@ -30,12 +30,14 @@ brew 'imagemagick'
 brew 'libiconv'
 brew 'libyaml'
 brew 'libzip'
+brew 'vips'
 brew 'zlib'
 
-# Programming language
-brew 'rbenv'
+# Programming
 brew 'golang'
+brew 'mysql-client@5.7'
 brew 'pyenv'
+brew 'rbenv'
 
 # fonts
 cask 'font-fira-code-nerd-font'
