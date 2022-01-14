@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ $# != 2 ]; then
-    echo "usage:  workspace start <workspace_name>
-        workspace stop <workspace_name>"
+if [ $# != 2 ] && [ $# != 3 ]; then
+    echo "usage:  workspace start <workspace_name> [<section_name>]
+        workspace stop <workspace_name> [<section_name>]"
     exit 1
 fi
 
@@ -65,32 +65,40 @@ workspace_init () {
             echo -e "* Use PHP 7.1.33\n"
             phpbrew use 7.1.33
 
-            cd ${LOPIDOCK_PATH}
+            if [ $2 == "docker" ] || [ $2 == "all" ]; then
+                cd ${LOPIDOCK_PATH}
 
-            # Exit if any commands returns non-zero
-            set -e
+                # Exit if any commands returns non-zero
+                set -e
 
-            echo -e "* Remove Creads's containers if exists\n"
-            docker-compose rm ${CONTAINERS_CREADS_WORKSPACE}
+                echo -e "* Remove Creads's containers if exists\n"
+                docker-compose rm ${CONTAINERS_CREADS_WORKSPACE}
 
-            echo -e "\n* Create containers for Creads\n"
-            docker-compose up -d ${CONTAINERS_CREADS_WORKSPACE}
+                echo -e "\n* Create containers for Creads\n"
+                docker-compose up -d ${CONTAINERS_CREADS_WORKSPACE}
 
-            # No exit if any commands returns non-zero
-            set +e
+                # No exit if any commands returns non-zero
+                set +e
+            fi
 
-            cd ${CREADS_WORKSPACE_PATH}
+            if [ $2 == "bootstrap" ] || [ $2 == "all" ]; then
+                cd ${CREADS_WORKSPACE_PATH}
 
-            echo -e "\n* Bootstrap Creads\n"
-            npx lerna bootstrap
+                echo -e "\n* Bootstrap Creads\n"
+                npx lerna bootstrap
+            fi
 
-            cd ${APP_CREADS_WORKSPACE_PATH}
-            echo -e "* Install App's vendors\n"
-            composer i
+            if [ $2 == "app" ] || [ $2 == "all" ]; then
+                cd ${APP_CREADS_WORKSPACE_PATH}
+                echo -e "* Install App's vendors\n"
+                composer i
+            fi
 
-            cd ${API_CREADS_WORKSPACE_PATH}
-            echo -e "* Install Api's vendors\n"
-            composer i
+            if [ $2 == "api" ] || [ $2 == "all" ]; then
+                cd ${API_CREADS_WORKSPACE_PATH}
+                echo -e "* Install Api's vendors\n"
+                composer i
+            fi
             ;;
 
         gift)
@@ -131,51 +139,69 @@ workspace_start () {
             echo -e "* Use PHP 7.1.33\n"
             phpbrew use 7.1.33
 
-            cd ${LOPIDOCK_PATH}
+            if [ $2 == "docker" ] || [ $2 == "all" ]; then
+                cd ${LOPIDOCK_PATH}
 
-            # Exit if any commands returns non-zero
-            set -e
+                # Exit if any commands returns non-zero
+                set -e
 
-            echo -e "Docker"
-            echo -e "******\n"
-            echo -e "* Start containers\n"
-            docker-compose start ${CONTAINERS_CREADS_WORKSPACE}
+                echo -e "Docker"
+                echo -e "******\n"
+                echo -e "* Start containers\n"
+                docker-compose start ${CONTAINERS_CREADS_WORKSPACE}
 
-            wait 60
+                wait 60
+            fi
 
             # No exit if any commands returns non-zero
             set +e
 
-            cd ${APP_CREADS_WORKSPACE_PATH}
+            if [ $2 == "app_resque" ] || [ $2 == "app_server" ] || [ $2 == "all" ]; then
+                cd ${APP_CREADS_WORKSPACE_PATH}
 
-            echo -e "App (Platform)"
-            echo -e "**************\n"
-            echo -e "* Start Resque processes"
-            symfony console resque:worker-start "*"
-            symfony console resque:scheduledworker-start
+                echo -e "App (Platform)"
+                echo -e "**************\n"
 
-            echo -e "\n"
-            echo -e "* Start webserver\n"
-            symfony server:start -d --port=8002
+                if [ $2 == "app_resque" ] || [ $2 == "all" ]; then
+                    echo -e "* Start Resque processes"
+                    symfony console resque:worker-start "*"
+                    symfony console resque:scheduledworker-start
+                fi
 
-            cd ${API_CREADS_WORKSPACE_PATH}
+                if [ $2 == "app_server" ] || [ $2 == "all" ]; then
+                    echo -e "\n"
+                    echo -e "* Start webserver\n"
+                    symfony server:start -d --port=8002
+                fi
+            fi
 
-            echo -e "\n"
-            echo -e "Partners API"
-            echo -e "************\n"
-            echo -e "* Start Resque processes"
-            symfony console resque:worker-start invoicing,sageone,credit,payment,webhook,hubspot,export_coupon,export_projects,spreadsheet,default,robot,project_proposal_reminder
-	        symfony console resque:worker-start image
-	        symfony console resque:scheduledworker-start
+            if [ $2 == "api_resque" ] || [ $2 == "api_server" ] || [ $2 == "api_websocket" ] || [ $2 == "all" ]; then
+                cd ${API_CREADS_WORKSPACE_PATH}
 
-            echo -e "\n"
-            echo -e "* Start webserver\n"
-            symfony server:start -d --no-tls --port=8000
-            # symfony console server:start -p8000
+                echo -e "\n"
+                echo -e "Partners API"
+                echo -e "************\n"
 
-            echo -e "\n"
-            echo -e "* Start websocket server\n"
-            symfony console websocket-server:start &
+                if [ $2 == "api_resque" ] || [ $2 == "all" ]; then
+                    echo -e "* Start Resque processes"
+                    symfony console resque:worker-start invoicing,sageone,credit,payment,webhook,hubspot,export_coupon,export_projects,spreadsheet,default,robot,project_proposal_reminder
+                    symfony console resque:worker-start image
+                    symfony console resque:scheduledworker-start
+                    echo -e "\n"
+                fi
+
+                if [ $2 == "api_server" ] || [ $2 == "all" ]; then
+                    echo -e "* Start webserver\n"
+                    # symfony server:start -d --no-tls --port=8000
+                    symfony console server:start 127.0.0.1:8000
+                    echo -e "\n"
+                fi
+
+                if [ $2 == "api_websocket" ] || [ $2 == "all" ]; then
+                    echo -e "* Start websocket server\n"
+                    symfony console websocket-server:start &
+                fi
+            fi
             ;;
 
         gift)
@@ -210,37 +236,56 @@ workspace_stop () {
 
             cd ${API_CREADS_WORKSPACE_PATH}
 
-            echo -e "Partners API"
-            echo -e "************\n"
-            echo -e "* Stop websocket server\n"
-            ps aux | grep websocket | grep -v grep | awk '{print $2}' | xargs kill -9
+            if [ $2 == "api_resque" ] || [ $2 == "api_server" ] || [ $2 == "api_websocket" ] || [ $2 == "all" ]; then
+                echo -e "Partners API"
+                echo -e "************\n"
 
-            echo -e "* Stop Resque processes\n"
-            symfony console resque:scheduledworker-stop
-            symfony console resque:worker-stop -a
+                if [ $2 == "api_websocket" ] || [ $2 == "all" ]; then
+                    echo -e "* Stop websocket server\n"
+                    ps aux | grep websocket | grep -v grep | awk '{print $2}' | xargs kill -9
+                    echo -e "\n"
+                fi
 
-            echo -e "\n"
-            echo -e "* Stop webserver\n"
-            symfony server:stop
-            # symfony console server:stop
+                if [ $2 == "api_resque" ] || [ $2 == "all" ]; then
+                    echo -e "* Stop Resque processes\n"
+                    symfony console resque:scheduledworker-stop
+                    symfony console resque:worker-stop -a
+                    echo -e "\n"
+                fi
 
-            cd ${APP_CREADS_WORKSPACE_PATH}
-            echo -e "App (Platform)"
-            echo -e "**************\n"
-            echo -e "* Stop Resque processes\n"
-            symfony console resque:scheduledworker-stop
-            symfony console resque:worker-stop -a
+                if [ $2 == "api_server" ] || [ $2 == "all" ]; then
+                    echo -e "* Stop webserver\n"
+                    # symfony server:stop
+                    symfony console server:stop
+                fi
+            fi
 
-            echo -e "\n"
-            echo -e "* Stop webserver\n"
-            symfony server:stop
+            if [ $2 == "app_resque" ] || [ $2 == "app_server" ] || [ $2 == "all" ]; then
+                cd ${APP_CREADS_WORKSPACE_PATH}
+                echo -e "App (Platform)"
+                echo -e "**************\n"
 
-            cd ${LOPIDOCK_PATH}
+                if [ $2 == "app_resque" ] || [ $2 == "all" ]; then
+                    echo -e "* Stop Resque processes\n"
+                    symfony console resque:scheduledworker-stop
+                    symfony console resque:worker-stop -a
+                    echo -e "\n"
+                fi
 
-            echo -e "Docker"
-            echo -e "******\n"
-            echo -e "* Stop containers for Creads workspace\n"
-            docker-compose stop ${CONTAINERS_CREADS_WORKSPACE}
+                if [ $2 == "app_server" ] || [ $2 == "all" ]; then
+                    echo -e "* Stop webserver\n"
+                    symfony server:stop
+                fi
+            fi
+
+            if [ $2 == "docker" ] || [ $2 == "all" ]; then
+                cd ${LOPIDOCK_PATH}
+
+                echo -e "Docker"
+                echo -e "******\n"
+                echo -e "* Stop containers for Creads workspace\n"
+                docker-compose stop ${CONTAINERS_CREADS_WORKSPACE}
+            fi
             ;;
 
         gift)
@@ -277,17 +322,23 @@ CONSOLE_CREADS_WORKSPACE_PATH=${CREADS_WORKSPACE_PATH}/console
 CONTAINERS_CREADS_WORKSPACE="creads-mailcatcher creads-mysql creads-redis creads-elasticsearch-partners"
 GIFT_LOPI_WORKSPACE_PATH=${LOPI_WORKSPACE_PATH}/gift
 
+section=$3
+
+if [ -z $section ]; then
+    section="all"
+fi
+
 case $1 in
     start)
-        workspace_start $2
+        workspace_start $2 $section
         ;;
 
     stop)
-        workspace_stop $2
+        workspace_stop $2 $section
         ;;
 
     init)
-        workspace_init $2
+        workspace_init $2 $section
         ;;
 
     *)
