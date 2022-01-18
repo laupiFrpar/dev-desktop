@@ -152,9 +152,9 @@ if [[ ! -f "$HOME/.zinit/bin/zinit.zsh" ]]; then
     mkdir -p "$HOME/.zinit" && chmod g-rwX "$HOME/.zinit"
   fi
 
-  git clone -q https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
-    success_echo || \
-    fail_echo "The clone has failed"
+  git clone -q https://github.com/zdharma-continuum/zinit "$HOME/.zinit/bin"
+    && success_echo \
+    || fail_echo "The clone has failed"
 
   source "$HOME/.zinit/bin/zinit.zsh"
   autoload -Uz _zinit

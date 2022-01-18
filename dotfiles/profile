@@ -51,7 +51,6 @@ setopt sharehistory     # Partage de l'historique entre terminaux
 
 alias console='symfony console'
 alias dev-desktop="bash <(curl -s https://raw.githubusercontent.com/laupiFrpar/dev-desktop/master/boot)"
-alias mysqldump57='/usr/local/opt/mysql-client@5.7/bin/mysqldump'
 
 # =============================================================================
 #                                Key Bindings
@@ -81,7 +80,7 @@ zinit wait lucid light-mode for \
 
 ### Another plugins need to compinit and cdreplay
 zinit wait lucid light-mode atinit"zicompinit; zicdreplay" for \
-    zdharma/fast-syntax-highlighting \
+    zdharma-continuum/fast-syntax-highlighting \
     zsh-users/zsh-completions
 
 ## Install ZSH theme
