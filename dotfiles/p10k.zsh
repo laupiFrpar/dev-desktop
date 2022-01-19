@@ -32,9 +32,13 @@
   typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
     os_icon                 # os identifier
+    context                 # user@hostname
     docker_status
-    battery                 # internal battery
-    wifi                    # wifi speed
+    node_version            # node.js version
+    php_version             # php version (https://www.php.net/)
+    symfony_version         # Symfony version
+    go_version              # go version (https://golang.org)
+    rbenv                   # ruby version from rbenv (https://github.com/rbenv/rbenv)
     # =========================[ Line #2 ]=========================
     newline
     dir                     # current directory
@@ -50,6 +54,8 @@
   # last prompt line gets hidden if it would overlap with left prompt.
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
+    battery                 # internal battery
+    wifi                    # wifi speed
     # direnv                  # direnv status (https://direnv.net/)
     # asdf                    # asdf version manager (https://github.com/asdf-vm/asdf)
     # virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
@@ -59,15 +65,11 @@
     # nodenv                  # node.js version from nodenv (https://github.com/nodenv/nodenv)
     # nvm                     # node.js version from nvm (https://github.com/nvm-sh/nvm)
     # nodeenv                 # node.js environment (https://github.com/ekalinin/nodeenv)
-    node_version            # node.js version
-    go_version              # go version (https://golang.org)
     # rust_version            # rustc version (https://www.rust-lang.org)
     # dotnet_version          # .NET version (https://dotnet.microsoft.com)
-    php_version             # php version (https://www.php.net/)
     # laravel_version         # laravel php framework version (https://laravel.com/)
     # java_version            # java version (https://www.java.com/)
     # package                 # name@version from package.json (https://docs.npmjs.com/files/package.json)
-    rbenv                   # ruby version from rbenv (https://github.com/rbenv/rbenv)
     # rvm                     # ruby version from rvm (https://rvm.io)
     # fvm                     # flutter version management (https://github.com/leoafarias/fvm)
     # luaenv                  # lua version from luaenv (https://github.com/cehoffman/luaenv)
@@ -864,7 +866,7 @@
 
   # Don't show context unless running with privileges or in SSH.
   # Tip: Remove the next line to always show context.
-  typeset -g POWERLEVEL9K_CONTEXT_{DEFAULT,SUDO}_{CONTENT,VISUAL_IDENTIFIER}_EXPANSION=
+  # typeset -g POWERLEVEL9K_CONTEXT_{DEFAULT,SUDO}_{CONTENT,VISUAL_IDENTIFIER}_EXPANSION=
 
   # Custom icon.
   # typeset -g POWERLEVEL9K_CONTEXT_VISUAL_IDENTIFIER_EXPANSION='⭐'
@@ -1560,6 +1562,30 @@
     p10k segment -f 208 -i '⭐' -t 'hello, %n'
   }
 
+  # DOCKER
+  # Show Docker status
+  prompt_docker_status() {
+    # if docker daemon isn't running you'll get an error saying it can't connect
+    local launched=$(docker info 2>&1 | grep "Cannot connect")
+
+    if [[ -n ${launched} ]]; then
+      p10k segment -i '' -f blue -t 'Not launched'
+    else
+      # p10k segment -i '' -f blue -t $(docker version -f "{{.Server.Version}}")
+      p10k segment -i '' -f blue -t 'Launched'
+    fi
+  }
+
+  # Symfony
+  # Show Symfony version
+  prompt_symfony_version() {
+    if [ -f app/bootstrap.php.cache ] || [ -f var/bootstrap.php.cache ]; then
+      local symfony_version=$(symfony console --version | egrep -o '([0-9]+\.?){3,}')
+      p10k segment -i '' -f white -t ${symfony_version}
+    fi
+  }
+
+
   # User-defined prompt segments may optionally provide an instant_prompt_* function. Its job
   # is to generate the prompt segment for display in instant prompt. See
   # https://github.com/romkatv/powerlevel10k/blob/master/README.md#instant-prompt.
@@ -1620,17 +1646,3 @@ typeset -g POWERLEVEL9K_CONFIG_FILE=${${(%):-%x}:a}
 
 (( ${#p10k_config_opts} )) && setopt ${p10k_config_opts[@]}
 'builtin' 'unset' 'p10k_config_opts'
-
-# DOCKER
-# Show current Docker version and connected machine
-prompt_docker_status() {
-  # if docker daemon isn't running you'll get an error saying it can't connect
-  local launched=$(docker info 2>&1 | grep "Cannot connect")
-
-  if [[ -n ${launched} ]]; then
-    p10k segment -i '' -f blue -t 'Not launched'
-  else
-    # p10k segment -i '' -f blue -t $(docker version -f "{{.Server.Version}}")
-    p10k segment -i '' -f blue -t 'Launched'
-  fi
-}
