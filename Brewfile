@@ -2,9 +2,9 @@ tap 'homebrew/bundle'
 tap 'homebrew/core'
 tap 'homebrew/services'
 tap 'homebrew/cask-fonts'
+tap 'symfony-cli/tap'
 
 # System base
-brew 'antigen'
 brew 'git'
 brew 'hub'
 brew 'wget'
@@ -23,6 +23,9 @@ brew 'mcrypt'
 brew 'openssl'
 brew 're2c'
 
+# Symfony
+brew 'symfony-cli'
+
 # Package for Creads
 brew 'bzip2'
 brew 'gd'
@@ -34,7 +37,6 @@ brew 'vips'
 brew 'zlib'
 
 # Programming
-brew 'golang'
 brew 'mysql-client@5.7'
 brew 'pyenv'
 brew 'rbenv'
