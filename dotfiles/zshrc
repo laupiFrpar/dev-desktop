@@ -2,22 +2,22 @@
 
 ## Load Oh My ZSH configuration
 if [ -e "$HOME/.ohmyzshrc" ]; then
-    source "$HOME/.ohmyzshrc"
+  source "$HOME/.ohmyzshrc"
 fi
 
 ## Load Zinit
-if [ -e "$HOME/.zinit/bin/zinit.zsh" ]; then
-    source "$HOME/.zinit/bin/zinit.zsh"
-    autoload -Uz _zinit
-    (( ${+_comps} )) && _comps[zinit]=_zinit
+if [ -e "${HOME}/.local/share/zinit/zinit.git" ]; then
+  source "${HOME}/.local/share/zinit/zinit.git/zinit.zsh"
+  autoload -Uz _zinit
+  (( ${+_comps} )) && _comps[zinit]=_zinit
 fi
 
 ## Load the profile
 if [ -e "$HOME/.profile" ]; then
-    source "$HOME/.profile"
+  source "$HOME/.profile"
 fi
 
 ## Load extra profile
 if [ -e "$HOME/.extra-profile" ]; then
-    source "$HOME/.extra-profile"
+  source "$HOME/.extra-profile"
 fi

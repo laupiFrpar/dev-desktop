@@ -145,20 +145,26 @@ if [ -d "$HOME/.antigen" ]; then
   success_echo
 fi
 
-if [[ ! -f "$HOME/.zinit/bin/zinit.zsh" ]]; then
+ZINIT_HOME="${HOME}/.local/share/zinit/zinit.git"
+
+if [[ -d "$HOME/.zinit" ]]; then
+  rm -rf "$HOME/.zinit"
+fi
+
+if [[ ! -f ${ZINIT_HOME}/zinit.zsh ]]; then
   progress_echo "Installig DHARMA Initiative Plugin Manager (zdharma/zinit)..."
 
-  if [[ ! -d "$HOME/.zinit" ]]; then
-    mkdir -p "$HOME/.zinit" && chmod g-rwX "$HOME/.zinit"
+  if [[ ! -d ${ZINIT_HOME} ]]; then
+    mkdir -p "$(dirname $ZINIT_HOME)"
   fi
 
-  git clone -q https://github.com/zdharma-continuum/zinit "$HOME/.zinit/bin" && success_echo || fail_echo "The clone has failed"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME" && success_echo || fail_echo "The clone has failed"
 
-  source "$HOME/.zinit/bin/zinit.zsh"
+  source "${ZINIT_HOME}/zinit.zsh"
   autoload -Uz _zinit
   (( ${+_comps} )) && _comps[zinit]=_zinit
 else
-  source "$HOME/.zinit/bin/zinit.zsh"
+  source "${ZINIT_HOME}/zinit.zsh"
   autoload -Uz _zinit
   (( ${+_comps} )) && _comps[zinit]=_zinit
   progress_echo "Update Zinit"

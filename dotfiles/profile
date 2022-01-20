@@ -27,6 +27,7 @@ export PHPBREW_RC_ENABLE=1 # Enable to switch php versions automatically
 
 export PHP_INI_SCAN_DIR=":$HOME/workspace/config/php"
 export THEME="xterm-256color"
+export ZINIT_HOME="${HOME}/.local/share/zinit/zinit.git"
 
 # =============================================================================
 #                                   Options
