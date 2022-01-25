@@ -1580,7 +1580,27 @@
   # Show Symfony version
   prompt_symfony_version() {
     if [ -f app/bootstrap.php.cache ] || [ -f var/bootstrap.php.cache ]; then
-      local symfony_version=$(symfony console --version | egrep -o '([0-9]+\.?){3,}')
+      local consoleCommand='symfony console --version'
+      local symfony_version='searching'
+
+      eval $consoleCommand >/dev/null
+
+      if [ "$?" -ne 0 ]; then
+        if [ -f app/console ]; then
+          consoleCommand='app/console --version'
+        elif [ -f bin/console ]; then
+          consoleCommand='bin/console --version'
+        fi
+      fi
+
+      eval $consoleCommand >/dev/null
+
+      if [ "$?" -ne 0 ]; then
+        symfony_version='error'
+      else
+        symfony_version=$(eval ${consoleCommand} | egrep -o '([0-9]+\.?){3,}')
+      fi
+
       p10k segment -i '' -f white -t ${symfony_version}
     fi
   }
