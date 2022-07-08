@@ -183,6 +183,7 @@ if [ -d ~/.p10krc ]; then
 fi
 
 mv -f dotfiles/p10k.zsh ~/.p10k.zsh
+mv -f dotfiles/p10k-custom.zsh ~/.p10k-custom.zsh
 success_echo
 
 title_echo "
