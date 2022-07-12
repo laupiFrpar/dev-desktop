@@ -38,6 +38,7 @@ brew 'zlib'
 
 # Programming
 brew 'mysql-client@5.7'
+brew 'php'
 brew 'postgresql'
 brew 'pyenv'
 brew 'rbenv'
