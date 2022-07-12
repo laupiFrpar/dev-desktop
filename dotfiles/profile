@@ -24,8 +24,6 @@ export PATH="$HOME/bin:$PATH"                         # Custom bin path
 export PATH="$PYENV_ROOT/bin:$PATH"                   # Python bin path
 # export PATH="/usr/local/go/bin:$PATH"                 # Go bin path
 
-export PHPBREW_RC_ENABLE=1 # Enable to switch php versions automatically
-
 export PHP_INI_SCAN_DIR=":$HOME/workspace/config/php"
 export THEME="xterm-256color"
 export ZINIT_HOME="${HOME}/.local/share/zinit/zinit.git"
@@ -104,11 +102,6 @@ source ~/.p10k-custom.zsh
 ## Load the iterm2 integration
 if [ -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
     source "${HOME}/.iterm2_shell_integration.zsh"
-fi
-
-## Load PHPBrew
-if [ -e "${HOME}/.phpbrew/bashrc" ]; then
-    source "${HOME}/.phpbrew/bashrc"
 fi
 
 eval "$(rbenv init -)"
